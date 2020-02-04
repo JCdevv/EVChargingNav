@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="168dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="168dp"
+            android:layout_marginBottom="677dp"
+            android:text="Config"
+            android:textSize="25sp" />
+
+    <TextView
+            android:id="@+id/textView"
+            android:layout_width="386dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="119dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="558dp"
+            android:text="Update Schedule:" />
+
+    <TextView
+            android:id="@+id/textView2"
+            android:layout_width="409dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="142dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="570dp"
+            android:text="Check for updates every.." />
+
+    <CheckBox
+            android:id="@+id/checkBox1"
+            android:layout_width="146dp"
+            android:layout_height="48dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="168dp"
+            android:layout_marginEnd="263dp"
+            android:layout_marginBottom="515dp"
+            android:text="Every Day" />
+
+    <CheckBox
+            android:id="@+id/checkBox2"
+            android:layout_width="146dp"
+            android:layout_height="48dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="218dp"
+            android:layout_marginEnd="262dp"
+            android:layout_marginBottom="465dp"
+            android:text="Every 3 Days" />
+
+    <CheckBox
+            android:id="@+id/checkBox3"
+            android:layout_width="146dp"
+            android:layout_height="48dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="267dp"
+            android:layout_marginEnd="262dp"
+            android:layout_marginBottom="416dp"
+            android:text="Every App Startup" />
+
+    <Button
+            android:id="@+id/submitButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="162dp"
+            android:layout_marginTop="478dp"
+            android:layout_marginEnd="161dp"
+            android:layout_marginBottom="205dp"
+            android:text="Submit" />
+
+
+</RelativeLayout>

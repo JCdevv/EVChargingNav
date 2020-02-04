@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+
+    <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="Choose Which Charging Points To Display"
+            android:textAlignment="center"
+            android:textSize="25sp" />
+
+    <Button
+            android:id="@+id/btnFrag2"
+            android:layout_width="160dp"
+            android:layout_height="55dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="116dp"
+            android:layout_marginTop="647dp"
+            android:layout_marginEnd="135dp"
+            android:layout_marginBottom="28dp"
+            android:text="SETTINGS" />
+
+    <Button
+            android:id="@+id/btnFrag"
+            android:layout_width="268dp"
+            android:layout_height="81dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="59dp"
+            android:layout_marginTop="533dp"
+            android:layout_marginEnd="83dp"
+            android:layout_marginBottom="115dp"
+            android:text="Show Charging Points" />
+
+    <Switch
+            android:id="@+id/switch1"
+            android:layout_width="224dp"
+            android:layout_height="73dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="85dp"
+            android:layout_marginTop="143dp"
+            android:layout_marginEnd="102dp"
+            android:layout_marginBottom="514dp"
+            android:showText="true"
+            android:text="Show Free Points"
+            android:textOff="NO"
+            android:textOn="YES" />
+
+    <Switch
+            android:id="@+id/switch3"
+            android:layout_width="220dp"
+            android:layout_height="74dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="85dp"
+            android:layout_marginTop="213dp"
+            android:layout_marginEnd="105dp"
+            android:layout_marginBottom="444dp"
+            android:showText="true"
+            android:text="On Street Only"
+            android:textOff="NO"
+            android:textOn="YES" />
+
+    <Switch
+            android:id="@+id/switch2"
+            android:layout_width="wrap_content"
+            android:layout_height="67dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="85dp"
+            android:layout_marginTop="287dp"
+            android:layout_marginEnd="107dp"
+            android:layout_marginBottom="377dp"
+            android:showText="true"
+            android:text="Single Phase"
+            android:textOff="NO"
+            android:textOn="YES" />
+
+    <Switch
+            android:id="@+id/switch4"
+            android:layout_width="217dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="84dp"
+            android:layout_marginTop="353dp"
+            android:layout_marginEnd="110dp"
+            android:layout_marginBottom="304dp"
+            android:showText="true"
+            android:text="Triple Phase"
+            android:textOff="NO"
+            android:textOn="YES" />
+
+    <Switch
+            android:id="@+id/switch5"
+            android:layout_width="217dp"
+            android:layout_height="63dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="85dp"
+            android:layout_marginTop="427dp"
+            android:layout_marginEnd="109dp"
+            android:layout_marginBottom="241dp"
+            android:showText="true"
+            android:text="DC"
+            android:textOff="NO"
+            android:textOn="YES" />
+
+</RelativeLayout>
