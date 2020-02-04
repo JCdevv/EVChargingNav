@@ -14,6 +14,8 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.sql.Timestamp
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,21 +35,66 @@ class MainActivity : AppCompatActivity() {
         viewPager = findViewById(R.id.container)
 
         var DB  = DatabaseHelper(applicationContext)
-        var timestamp = DB.getTimestamp().toLong()
-        var currentTime = Timestamp(System.currentTimeMillis()).toString().toLong()
 
-        val result: CharSequence = DateUtils.getRelativeTimeSpanString(timestamp, currentTime, 0)
+        if(DB.getTimestamp() == ""){
+            DB.setUpdate(0)
+        }
 
-        println(result)
+        var timestamp = Timestamp(DB.getTimestamp().toLong())
 
-        if(result[0].equals(3)){
-            //get conns
+        var currentTime = Timestamp(System.currentTimeMillis())
+
+        val result = getDaysBetween(timestamp,currentTime)
+
+        if(result == 3){
+            DB.emptyTables()
+
+            var GM = getMarkers()
+            GM.execute()
+
         }else{
-            //continue
+            //do nothing
         }
 
         setupViewPager(viewPager)
     }
+
+    private fun getDaysBetween(start: Timestamp, end: Timestamp): Int {
+        var start = start
+        var end = end
+        var negative = false
+        if (end.before(start)) {
+            negative = true
+            val temp = start
+            start = end
+            end = temp
+        }
+        val cal = GregorianCalendar()
+        cal.setTime(start)
+        cal.set(Calendar.HOUR_OF_DAY, 0)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+        val calEnd = GregorianCalendar()
+        calEnd.setTime(end)
+        calEnd.set(Calendar.HOUR_OF_DAY, 0)
+        calEnd.set(Calendar.MINUTE, 0)
+        calEnd.set(Calendar.SECOND, 0)
+        calEnd.set(Calendar.MILLISECOND, 0)
+        if (cal.get(Calendar.YEAR) === calEnd.get(Calendar.YEAR)) {
+            return if (negative) (calEnd.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_YEAR)) * -1 else calEnd.get(
+                Calendar.DAY_OF_YEAR
+            ) - cal.get(Calendar.DAY_OF_YEAR)
+        }
+        var days = 0
+        while (calEnd.after(cal)) {
+            cal.add(Calendar.DAY_OF_YEAR, 1)
+            days++
+        }
+        return if (negative) days * -1 else days
+    }
+
+
 
 
 
@@ -123,8 +170,8 @@ class MainActivity : AppCompatActivity() {
                 //var getData = GetData()
                 //getData.execute()
 
-                var getCon = GetConnectors();
-                getCon.execute()
+                //var getCon = GetConnectors();
+                //getCon.execute()
             }
             else{
                 viewPager!!.setCurrentItem(1)
@@ -132,10 +179,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-    inner class GetConnectors : AsyncTask<Void, Int, Boolean>() {
+    inner class getMarkers : AsyncTask<Void, Int, Boolean>() {
 
         override fun doInBackground(vararg p0: Void?): Boolean {
 

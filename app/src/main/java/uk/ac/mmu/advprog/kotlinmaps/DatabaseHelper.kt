@@ -41,7 +41,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         println("Updating ETAG....")
         val db = this.writableDatabase
         var query = ""
-        var timestamp = Timestamp(System.currentTimeMillis())
+        var timestamp = System.currentTimeMillis()
 
 
         if(getUpdate().equals("")){
@@ -80,7 +80,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         var timestamp = ""
 
         var query =
-            "SELECT schedule FROM config"
+            "SELECT timestamp FROM config"
 
         var cursor: Cursor = db.rawQuery(query, null)
 
