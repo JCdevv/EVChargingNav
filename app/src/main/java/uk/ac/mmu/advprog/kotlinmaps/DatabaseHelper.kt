@@ -24,7 +24,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
             "CREATE TABLE `location` ( `locationid` TEXT, `locationname` TEXT, `latitude` TEXT, `longitude` TEXT, `street` TEXT, `postcode` TEXT, `payment` TEXT, `paymentdetails` TEXT,`subscription` TEXT, `subscriptiondetails` TEXT, `parkingpayment` TEXT, `parkingpaymentdetails` TEXT, `onstreet` TEXT, PRIMARY KEY(`locationid`) )"
         var chargeCreate =
             "CREATE TABLE `chargemethod` (`locationid` TEXT, `chargeid` INTEGER )"
-        var createConfig = "CREATE TABLE `config` (`schedule` NUMBER, `timestamp` TEXT)"
+        var createConfig = "CREATE TABLE `config` (`schedule` TEXT, `timestamp` TEXT)"
 
         p0?.execSQL(connectorCreate)
         p0?.execSQL(locationCreate)
@@ -38,22 +38,27 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
     }
 
     fun setUpdate(schedule : Int){
-        println("Updating ETAG....")
         val db = this.writableDatabase
         var query = ""
         var timestamp = System.currentTimeMillis()
 
+        db.beginTransaction()
 
-        if(getUpdate().equals("")){
+
+        if(getSchedule().equals("")){
             query = "INSERT INTO config VALUES ('$schedule','$timestamp')"
+            println(query)
         }
         else{
-            query = "UPDATE config SET etag = '$schedule' AND timestamp = '$timestamp'"
+            query = "UPDATE config SET schedule = '$schedule'; UPDATE config SET timestamp = '$timestamp'"
+            println(query)
         }
         db.execSQL(query)
+        db.setTransactionSuccessful()
+        db.endTransaction()
     }
 
-    fun getUpdate() : String{
+    fun getSchedule() : String{
         var db = this.writableDatabase
         var etag = ""
 

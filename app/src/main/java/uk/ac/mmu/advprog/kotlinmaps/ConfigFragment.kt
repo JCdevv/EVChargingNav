@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.CompoundButton
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 
 
@@ -15,7 +16,7 @@ import androidx.fragment.app.Fragment
 class ConfigFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        var view : View = inflater.inflate(R.layout.loadingfragment,container,false)
+        var view : View = inflater.inflate(R.layout.fragment_config,container,false)
 
 
         //RENAME BELOW
@@ -27,28 +28,28 @@ class ConfigFragment : Fragment() {
 
         check1.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
-                checkCount--
+                checkCount++
             }
             else{
-                checkCount++
+                checkCount--
             }
         })
 
         check2.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
-                checkCount--
+                checkCount++
             }
             else{
-                checkCount++
+                checkCount--
             }
         })
 
         check3.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
-                checkCount--
+                checkCount++
             }
             else{
-                checkCount++
+                checkCount--
             }
         })
 
@@ -69,7 +70,7 @@ class ConfigFragment : Fragment() {
                     db.setUpdate(0)
                 }
             }else{
-                //show error
+                Toast.makeText(this.context,"Please Only Choose One Option",Toast.LENGTH_SHORT)
             }
 
         })

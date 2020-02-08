@@ -52,10 +52,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         var context: Context = activity!!.applicationContext
         var db = DatabaseHelper(context)
@@ -277,16 +274,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         override fun doInBackground(vararg p0: Void): PolylineOptions {
 
-
-
             val queue = Volley.newRequestQueue(activity!!.applicationContext)
-
 
             val url =
                 "https://maps.googleapis.com/maps/api/directions/json?origin=" + currentLoc.latitude + "," + currentLoc.longitude + "&destination=" + destLoc.latitude + "," + destLoc.longitude + "&key=${API_KEY}"
 
             println(url)
-
 
                 val stringRequest = StringRequest(Request.Method.GET, url,
                     Response.Listener<String> { response ->

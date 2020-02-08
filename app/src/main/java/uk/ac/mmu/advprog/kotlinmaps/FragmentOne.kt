@@ -1,6 +1,5 @@
 package uk.ac.mmu.advprog.kotlinmaps
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -60,9 +59,6 @@ class FragmentOne : Fragment() {
 
         btnFrag.setOnClickListener( View.OnClickListener {
 
-            var context: Context = activity!!.applicationContext
-            var db = DatabaseHelper(context)
-
             var mp = this.activity as MainActivity
 
             mp.adapter?.addFragment(MapsFragment(), "Fragment Two")
@@ -72,7 +68,7 @@ class FragmentOne : Fragment() {
 
         })
 
-        btnFrag.setOnClickListener( View.OnClickListener {
+        btnFrag2.setOnClickListener( View.OnClickListener {
 
             var mp = this.activity as MainActivity
 

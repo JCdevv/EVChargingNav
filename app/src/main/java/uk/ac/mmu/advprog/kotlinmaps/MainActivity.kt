@@ -37,6 +37,9 @@ class MainActivity : AppCompatActivity() {
         var DB  = DatabaseHelper(applicationContext)
 
         if(DB.getTimestamp() == ""){
+            var GM = getMarkers()
+            GM.execute()
+
             DB.setUpdate(0)
         }
 
@@ -46,14 +49,14 @@ class MainActivity : AppCompatActivity() {
 
         val result = getDaysBetween(timestamp,currentTime)
 
-        if(result == 3){
+        println("The current update schedule is every  ${DB.getSchedule()} days")
+
+        if(result > Integer.parseInt(DB.getSchedule())){
             DB.emptyTables()
 
             var GM = getMarkers()
             GM.execute()
 
-        }else{
-            //do nothing
         }
 
         setupViewPager(viewPager)
@@ -96,8 +99,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
-
     //Opens requested fragment
     fun setViewPager(fragmentNumber: Int) {
         viewPager?.currentItem = fragmentNumber
@@ -114,76 +115,11 @@ class MainActivity : AppCompatActivity() {
         viewPager?.adapter = adapter
     }
 
-    inner class GetEtag : AsyncTask<Void, Int, Boolean>() {
 
-        //ETAG on saturday 14th 642393ff884a5f2108fa0d49f762bade
-
-        var DB  = DatabaseHelper(applicationContext)
-
-        override fun doInBackground(vararg p0: Void?): Boolean {
-
-            var etag = ""
-            var update = false
-
-            //Make http call
-            var urlConnection: HttpURLConnection? = null
-            var input: InputStream? = null
-
-            try {
-                var url = URL("https://data.gov.uk/dataset/1ce239a6-d720-4305-ab52-17793fedfac3/national-charge-point-registry")
-                //Open connection
-                urlConnection = url.openConnection() as HttpURLConnection
-                input = BufferedInputStream(urlConnection.inputStream)
-
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-
-
-            try {
-                etag = urlConnection!!.getHeaderField("ETag")
-                update = DB.getETag().equals(etag)
-
-                println("ETAG IS: $etag")
-                println("Current etag is: " + DB.getETag())
-
-                if(!update){
-                    DB.setETag(etag)
-                }
-
-
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-            return update
-        }
-
-        override fun onPostExecute(result: Boolean) {
-            super.onPostExecute(result)
-
-            if(!result){
-
-                DB.emptyTables()
-
-                //var getData = GetData()
-                //getData.execute()
-
-                //var getCon = GetConnectors();
-                //getCon.execute()
-            }
-            else{
-                viewPager!!.setCurrentItem(1)
-            }
-        }
-    }
 
     inner class getMarkers : AsyncTask<Void, Int, Boolean>() {
 
         override fun doInBackground(vararg p0: Void?): Boolean {
-
-
 
             //Make http call
             var urlConnection: HttpURLConnection? = null
@@ -356,127 +292,6 @@ class MainActivity : AppCompatActivity() {
         locations.clear()
     }
 
-
-
-    inner class GetData : AsyncTask<Void, Int, ArrayList<Location>?>() {
-
-        override fun doInBackground(vararg p0: Void?): ArrayList<Location>? {
-
-            var locations = arrayListOf<Location>()
-
-            //Make http call
-            var urlConnection: HttpURLConnection? = null
-            var input: InputStream? = null
-
-            try {
-                var url = URL("http://chargepoints.dft.gov.uk/api/retrieve/registry/format/json")
-                //Open connection
-                urlConnection = url.openConnection() as HttpURLConnection
-                input = BufferedInputStream(urlConnection.inputStream)
-
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-
-            //Convert stream into a usable string
-
-            println(input)
-
-            var response: String = convertStreamToString(input)
-
-            println(response)
-
-            try {
-
-                // Parse json
-
-                var counter = 0
-
-                var obj = JSONObject(response)
-                var jarry: JSONArray = obj.getJSONArray("ChargeDevice")
-
-                var progress = 0;
-
-                for (i in 0..(jarry.length() - 1)) {
-                    var deviceObject: JSONObject = jarry.get(i) as JSONObject
-
-                    val locationname = deviceObject.get("ChargeDeviceName").toString()
-                    val locationid = deviceObject.get("ChargeDeviceId").toString()
-
-                    var markerObject: JSONObject =
-                        deviceObject.get("ChargeDeviceLocation") as JSONObject
-
-                    val latitude = markerObject.get("Latitude").toString()
-                    val longitude = markerObject.get("Longitude").toString()
-
-                    var addressObject: JSONObject = markerObject.get("Address") as JSONObject
-
-                    val street = addressObject.get("Street").toString()
-                    val postcode = addressObject.get("PostCode").toString()
-                    val payment = deviceObject.get("PaymentRequiredFlag").toString()
-                    val paymentdetails = deviceObject.get("PaymentDetails").toString()
-                    val subscription = deviceObject.get("SubscriptionRequiredFlag").toString()
-                    val subscriptiondetails = deviceObject.get("SubscriptionDetails").toString()
-                    val parkingpayment = deviceObject.get("ParkingFeesFlag").toString()
-                    val parkingpaymentdetails = deviceObject.get("ParkingFeesDetails").toString()
-                    val onstreet = deviceObject.get("OnStreetFlag").toString()
-
-                    val loc = Location(
-                        locationid,
-                        locationname,
-                        latitude,
-                        longitude,
-                        street,
-                        postcode,
-                        payment,
-                        paymentdetails,
-                        subscription,
-                        subscriptiondetails,
-                        parkingpayment,
-                        parkingpaymentdetails,
-                        onstreet
-                    )
-
-                    print(loc.toString())
-
-                    locations.add(loc)
-
-                    counter + counter + 1
-
-                    publishProgress(counter)
-
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-
-            println(locations.size)
-            return locations
-        }
-
-
-        override fun onPostExecute(result: ArrayList<Location>?) {
-            super.onPostExecute(result)
-
-            var array = result
-            println(array!!.size)
-
-            var context: Context = this@MainActivity
-            var db = DatabaseHelper(context)
-
-            for (i in 0..array!!.size -1) {
-
-                db.insertLocation(array!!.get(i))
-            }
-
-            //Delays the map fragment inflation until marker data has been and stored, so that this data can be used within onMapReady
-
-            //var adapter = SectionsStatePagerAdapter(supportFragmentManager)
-            //adapter.addFragment(MapsFragment(), "Fragment Two")
-            //viewPager?.adapter = adapter
-        }
-    }
 
     fun convertStreamToString(`is`: InputStream?): String {
         val s = java.util.Scanner(`is`).useDelimiter("\\A")
