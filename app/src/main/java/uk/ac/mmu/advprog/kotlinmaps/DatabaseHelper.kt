@@ -24,7 +24,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
             "CREATE TABLE `location` ( `locationid` TEXT, `locationname` TEXT, `latitude` TEXT, `longitude` TEXT, `street` TEXT, `postcode` TEXT, `payment` TEXT, `paymentdetails` TEXT,`subscription` TEXT, `subscriptiondetails` TEXT, `parkingpayment` TEXT, `parkingpaymentdetails` TEXT, `onstreet` TEXT, PRIMARY KEY(`locationid`) )"
         var chargeCreate =
             "CREATE TABLE `chargemethod` (`locationid` TEXT, `chargeid` INTEGER )"
-        var createConfig = "CREATE TABLE `config` (`schedule` TEXT, `timestamp` TEXT)"
+        var createConfig = "CREATE TABLE `config` (`schedule` TEXT, `timestamp` TEXT, `source`, NUMBER)"
 
         p0?.execSQL(connectorCreate)
         p0?.execSQL(locationCreate)
@@ -37,16 +37,48 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    fun getSource() : Int{
+        var db = this.writableDatabase
+        var source = 0
+
+        var query =
+            "SELECT source FROM config"
+
+        var cursor: Cursor = db.rawQuery(query, null)
+
+        if (cursor.moveToNext()) {
+            do {
+
+                source = cursor.getInt(cursor.getColumnIndex("source"))
+
+            } while (cursor.moveToNext())
+        }
+
+        return source
+    }
+
+    fun setSource(Source : Int){
+        val db = this.writableDatabase
+        var query = "UPDATE config SET source = '$Source'"
+        
+        db.beginTransaction()
+
+        db.execSQL(query)
+        db.setTransactionSuccessful()
+        db.endTransaction()
+    }
+
     fun setUpdate(schedule : Int){
         val db = this.writableDatabase
         var query = ""
         var timestamp = System.currentTimeMillis()
+        var source = 0
 
         db.beginTransaction()
 
 
         if(getSchedule().equals("")){
-            query = "INSERT INTO config VALUES ('$schedule','$timestamp')"
+            query = "INSERT INTO config VALUES ('$schedule','$timestamp',$source)"
             println(query)
         }
         else{
@@ -101,41 +133,6 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
     }
 
-
-    fun setETag(etag : String){
-        println("Updating ETAG....")
-        val db = this.writableDatabase
-        var query = ""
-
-        if(getETag().equals("")){
-            query = "INSERT INTO config VALUES ('$etag')"
-        }
-        else{
-            query = "UPDATE config SET etag = '$etag'"
-        }
-        db.execSQL(query)
-    }
-
-    fun getETag() : String{
-        var db = this.writableDatabase
-        var etag = ""
-
-        var query =
-            "SELECT etag FROM config"
-
-        var cursor: Cursor = db.rawQuery(query, null)
-
-        if (cursor.moveToNext()) {
-            do {
-
-                etag = cursor.getString(cursor.getColumnIndex("etag"))
-
-            } while (cursor.moveToNext())
-        }
-
-        return etag
-
-    }
 
     fun emptyTables(){
         val db = this.writableDatabase

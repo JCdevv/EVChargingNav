@@ -23,7 +23,10 @@ class ConfigFragment : Fragment() {
         var check1 : CheckBox = view.findViewById(R.id.checkBox1)
         var check2 : CheckBox = view.findViewById(R.id.checkBox2)
         var check3 : CheckBox = view.findViewById(R.id.checkBox3)
+        var check4 : CheckBox = view.findViewById(R.id.checkBox4)
+        var check5 : CheckBox = view.findViewById(R.id.checkBox5)
         var subBut : Button = view.findViewById(R.id.submitButton)
+        var subBut2 : Button = view.findViewById(R.id.button2)
         var checkCount = 0;
 
         check1.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
@@ -53,6 +56,7 @@ class ConfigFragment : Fragment() {
             }
         })
 
+
         subBut.setOnClickListener( View.OnClickListener {
 
             var context: Context = activity!!.applicationContext
@@ -74,6 +78,21 @@ class ConfigFragment : Fragment() {
             }
 
         })
+
+        subBut2.setOnClickListener( View.OnClickListener {
+
+            var context: Context = activity!!.applicationContext
+            var db = DatabaseHelper(context)
+
+            if(check1.isChecked && check2.isChecked || !check1.isChecked && !check2.isChecked){
+
+            }
+            else{
+
+            }
+
+        })
+
 
         return view
     }

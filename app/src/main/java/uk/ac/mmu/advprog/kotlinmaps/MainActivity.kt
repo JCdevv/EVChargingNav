@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.format.DateUtils
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import org.json.JSONArray
@@ -52,11 +53,21 @@ class MainActivity : AppCompatActivity() {
         println("The current update schedule is every  ${DB.getSchedule()} days")
 
         if(result > Integer.parseInt(DB.getSchedule())){
+
+            var loadingText : TextView = LoadingFragment().view!!.findViewById(R.id.textView)
+            loadingText.setText("Updating..")
+
             DB.emptyTables()
 
             var GM = getMarkers()
             GM.execute()
 
+        }
+        else{
+            adapter?.addFragment(FragmentOne(), "Fragment One")
+
+            viewPager?.adapter = adapter
+            setViewPager(2)
         }
 
         setupViewPager(viewPager)
@@ -109,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         adapter = SectionsStatePagerAdapter(supportFragmentManager)
 
         adapter?.addFragment(LoadingFragment(),"Loading Fragment")
-        adapter?.addFragment(FragmentOne(), "Fragment One")
+
 
 
         viewPager?.adapter = adapter

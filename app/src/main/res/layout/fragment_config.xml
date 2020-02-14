@@ -35,6 +35,20 @@
             android:text="Update Schedule:" />
 
     <TextView
+            android:id="@+id/textView3"
+            android:layout_width="386dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="454dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="223dp"
+            android:text="Change Data Source:" />
+
+    <TextView
             android:id="@+id/textView2"
             android:layout_width="409dp"
             android:layout_height="wrap_content"
@@ -98,11 +112,53 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="162dp"
-            android:layout_marginTop="478dp"
-            android:layout_marginEnd="161dp"
-            android:layout_marginBottom="205dp"
+            android:layout_marginStart="160dp"
+            android:layout_marginTop="347dp"
+            android:layout_marginEnd="163dp"
+            android:layout_marginBottom="336dp"
             android:text="Submit" />
+
+    <CheckBox
+            android:id="@+id/checkBox4"
+            android:layout_width="168dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="481dp"
+            android:layout_marginEnd="242dp"
+            android:layout_marginBottom="213dp"
+            android:text="Gov UK" />
+
+    <CheckBox
+            android:id="@+id/checkBox5"
+            android:layout_width="168dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="522dp"
+            android:layout_marginEnd="242dp"
+            android:layout_marginBottom="172dp"
+            android:text="The other one" />
+
+    <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="158dp"
+            android:layout_marginTop="596dp"
+            android:layout_marginEnd="165dp"
+            android:layout_marginBottom="87dp"
+            android:text="Button" />
 
 
 </RelativeLayout>
