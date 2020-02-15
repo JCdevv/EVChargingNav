@@ -37,9 +37,10 @@ class MainActivity : AppCompatActivity() {
 
         var DB  = DatabaseHelper(applicationContext)
 
+
         if(DB.getTimestamp() == ""){
-            var GM = getMarkers()
-            GM.execute()
+            //var GM = getMarkers()
+            //GM.execute()
 
             DB.setUpdate(0)
         }
@@ -52,15 +53,29 @@ class MainActivity : AppCompatActivity() {
 
         println("The current update schedule is every  ${DB.getSchedule()} days")
 
-        if(result > Integer.parseInt(DB.getSchedule())){
+        println(result)
 
-            var loadingText : TextView = LoadingFragment().view!!.findViewById(R.id.textView)
-            loadingText.setText("Updating..")
+        setupViewPager(viewPager)
 
+        if(result < Integer.parseInt(DB.getSchedule())){
+
+            //var loadingText : TextView = adapter!!.getItem(1).view!!.findViewById(R.id.textTitle)
+            //loadingText.setText("Updating..")
+
+            println("Hello we are here")
+
+            /*
             DB.emptyTables()
 
-            var GM = getMarkers()
-            GM.execute()
+            if(DB.getSource() == 1){
+                var GM = getMarkers()
+                GM.execute()
+            }
+            else{
+                //
+            }*/
+
+
 
         }
         else{
@@ -70,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             setViewPager(2)
         }
 
-        setupViewPager(viewPager)
+
     }
 
     private fun getDaysBetween(start: Timestamp, end: Timestamp): Int {
@@ -107,8 +122,6 @@ class MainActivity : AppCompatActivity() {
         }
         return if (negative) days * -1 else days
     }
-
-
 
     //Opens requested fragment
     fun setViewPager(fragmentNumber: Int) {
@@ -253,6 +266,125 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+
+    /*
+    inner class getOpenMarkers : AsyncTask<Void, Int, Boolean>() {
+
+        override fun doInBackground(vararg p0: Void?): Boolean {
+
+            //Make http call
+            var urlConnection: HttpURLConnection? = null
+            var input: InputStream? = null
+
+            try {
+                var url = URL("http://chargepoints.dft.gov.uk/api/retrieve/registry/format/json")
+                //Open connection
+                urlConnection = url.openConnection() as HttpURLConnection
+                input = BufferedInputStream(urlConnection.inputStream)
+
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+            //Convert stream into a usable string
+
+            println(input)
+
+            var response: String = convertStreamToString(input)
+
+            println(response)
+
+            try {
+
+                // Parse json
+
+                var jarry = JSONArray(response)
+
+                for (i in 0..(jarry.length()) -1) {
+                    var deviceObject: JSONObject = jarry.get(i) as JSONObject
+
+                    val locationid = deviceObject.get("ID").toString()
+
+                    var addressObj: JSONObject =
+                        deviceObject.get("AddressInfo") as JSONObject
+
+                    val street = addressObj.get("Title").toString()
+                    val postcode = addressObj.get("Postcode").toString()
+
+                    var usageObj: JSONObject =
+                        deviceObject.get("UsageType") as JSONObject
+
+                    val payment = usageObj.get("IsPayAtLocation").toString()
+                    val subscription = usageObj.get("IsMembershipRequired").toString()
+
+                    val parkingpayment = deviceObject.get("ParkingFeesFlag").toString()
+                    val parkingpaymentdetails = deviceObject.get("ParkingFeesDetails").toString()
+                    val onstreet = deviceObject.get("OnStreetFlag").toString()
+
+                    val latitude = deviceObject.get("Latitude").toString()
+                    val longitude = deviceObject.get("Longitude").toString()
+
+                    var addressObject: JSONObject = markerObject.get("Address") as JSONObject
+
+
+
+                    var connectorObject : JSONObject = connArray.get(i) as JSONObject
+
+                    val outputkw = connectorObject.get("RatedOutputkW").toString()
+                    val outputvoltage = connectorObject.get("RatedOutputVoltage").toString()
+                    val outputcurrent = connectorObject.get("RatedOutputCurrent").toString()
+                    val chargemethod = connectorObject.get("ChargeMethod").toString()
+                    val service = connectorObject.get("ChargePointStatus").toString()
+
+                    val con = Connector(locationid,
+                        0,
+                        outputkw,
+                        outputvoltage,
+                        outputcurrent,
+                        chargemethod,
+                        service)
+
+                    connectors.add(con)
+
+                    val loc = Location(
+                        locationid,
+                        locationname,
+                        latitude,
+                        longitude,
+                        street,
+                        postcode,
+                        payment,
+                        paymentdetails,
+                        subscription,
+                        subscriptiondetails,
+                        parkingpayment,
+                        parkingpaymentdetails,
+                        onstreet
+                    )
+
+                    locations.add(loc)
+
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return true
+        }
+
+
+
+        override fun onPostExecute(result: Boolean) {
+            insertLocations()
+            insertConnectors()
+
+
+            viewPager!!.setCurrentItem(1)
+
+        }
+    }*/
+
+
 
     fun insertConnectors(){
 

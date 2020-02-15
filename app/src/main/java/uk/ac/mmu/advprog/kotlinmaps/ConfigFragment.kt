@@ -20,16 +20,16 @@ class ConfigFragment : Fragment() {
 
 
         //RENAME BELOW
-        var check1 : CheckBox = view.findViewById(R.id.checkBox1)
-        var check2 : CheckBox = view.findViewById(R.id.checkBox2)
-        var check3 : CheckBox = view.findViewById(R.id.checkBox3)
-        var check4 : CheckBox = view.findViewById(R.id.checkBox4)
-        var check5 : CheckBox = view.findViewById(R.id.checkBox5)
-        var subBut : Button = view.findViewById(R.id.submitButton)
+        var dailyCheck : CheckBox = view.findViewById(R.id.checkBox1)
+        var threeCheck : CheckBox = view.findViewById(R.id.checkBox2)
+        var everydayCheck : CheckBox = view.findViewById(R.id.checkBox3)
+        var govCheck : CheckBox = view.findViewById(R.id.checkBox4)
+        var openCheck : CheckBox = view.findViewById(R.id.checkBox5)
+        var scheduleSubmit : Button = view.findViewById(R.id.submitButton)
         var subBut2 : Button = view.findViewById(R.id.button2)
         var checkCount = 0;
 
-        check1.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+        dailyCheck.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
                 checkCount++
             }
@@ -38,7 +38,7 @@ class ConfigFragment : Fragment() {
             }
         })
 
-        check2.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+        threeCheck.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
                 checkCount++
             }
@@ -47,7 +47,7 @@ class ConfigFragment : Fragment() {
             }
         })
 
-        check3.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+        everydayCheck.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
                 checkCount++
             }
@@ -57,7 +57,7 @@ class ConfigFragment : Fragment() {
         })
 
 
-        subBut.setOnClickListener( View.OnClickListener {
+        scheduleSubmit.setOnClickListener( View.OnClickListener {
 
             var context: Context = activity!!.applicationContext
             var db = DatabaseHelper(context)
@@ -66,11 +66,11 @@ class ConfigFragment : Fragment() {
             // 3 = every 3 days
             // 0 = every startup
             if(checkCount == 1){
-                if(check1.isChecked){
+                if(dailyCheck.isChecked){
                     db.setUpdate(1)
-                }else if(check2.isChecked){
+                }else if(threeCheck.isChecked){
                     db.setUpdate(3)
-                }else if(check3.isChecked){
+                }else if(everydayCheck.isChecked){
                     db.setUpdate(0)
                 }
             }else{
@@ -84,11 +84,16 @@ class ConfigFragment : Fragment() {
             var context: Context = activity!!.applicationContext
             var db = DatabaseHelper(context)
 
-            if(check1.isChecked && check2.isChecked || !check1.isChecked && !check2.isChecked){
-
+            if(govCheck.isChecked && openCheck.isChecked || !govCheck.isChecked && !openCheck.isChecked){
+                //do nothing
             }
             else{
-
+                if(govCheck.isChecked){
+                    db.setSource(1)
+                }
+                else if(openCheck.isChecked){
+                    db.setSource(2)
+                }
             }
 
         })

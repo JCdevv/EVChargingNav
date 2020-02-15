@@ -24,7 +24,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
             "CREATE TABLE `location` ( `locationid` TEXT, `locationname` TEXT, `latitude` TEXT, `longitude` TEXT, `street` TEXT, `postcode` TEXT, `payment` TEXT, `paymentdetails` TEXT,`subscription` TEXT, `subscriptiondetails` TEXT, `parkingpayment` TEXT, `parkingpaymentdetails` TEXT, `onstreet` TEXT, PRIMARY KEY(`locationid`) )"
         var chargeCreate =
             "CREATE TABLE `chargemethod` (`locationid` TEXT, `chargeid` INTEGER )"
-        var createConfig = "CREATE TABLE `config` (`schedule` TEXT, `timestamp` TEXT, `source`, NUMBER)"
+        var createConfig = "CREATE TABLE `config` (`schedule` TEXT, `timestamp` TEXT, `source` NUMBER)"
 
         p0?.execSQL(connectorCreate)
         p0?.execSQL(locationCreate)
@@ -59,11 +59,13 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
     fun setSource(Source : Int){
         val db = this.writableDatabase
-        var query = "UPDATE config SET source = '$Source'"
+        var query = "UPDATE config SET source = $Source"
         
         db.beginTransaction()
 
         db.execSQL(query)
+
+        println(query)
         db.setTransactionSuccessful()
         db.endTransaction()
     }
@@ -72,7 +74,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val db = this.writableDatabase
         var query = ""
         var timestamp = System.currentTimeMillis()
-        var source = 0
+        var source = 1
 
         db.beginTransaction()
 
