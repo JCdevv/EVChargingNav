@@ -7,6 +7,7 @@ import android.text.format.DateUtils
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import com.google.gson.JsonObject
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedInputStream
@@ -57,14 +58,8 @@ class MainActivity : AppCompatActivity() {
 
         setupViewPager(viewPager)
 
-        if(result < Integer.parseInt(DB.getSchedule())){
+        if(result > Integer.parseInt(DB.getSchedule())){
 
-            //var loadingText : TextView = adapter!!.getItem(1).view!!.findViewById(R.id.textTitle)
-            //loadingText.setText("Updating..")
-
-            println("Hello we are here")
-
-            /*
             DB.emptyTables()
 
             if(DB.getSource() == 1){
@@ -72,20 +67,16 @@ class MainActivity : AppCompatActivity() {
                 GM.execute()
             }
             else{
-                //
-            }*/
-
-
-
+                var GOM = getOpenMarkers()
+                GOM.execute()
+            }
         }
         else{
             adapter?.addFragment(FragmentOne(), "Fragment One")
 
             viewPager?.adapter = adapter
-            setViewPager(2)
+            setViewPager(1)
         }
-
-
     }
 
     private fun getDaysBetween(start: Timestamp, end: Timestamp): Int {
@@ -261,13 +252,16 @@ class MainActivity : AppCompatActivity() {
             insertLocations()
             insertConnectors()
 
+            adapter?.addFragment(FragmentOne(), "Fragment One")
 
-            viewPager!!.setCurrentItem(1)
+            viewPager?.adapter = adapter
+            setViewPager(1)
+
 
         }
     }
 
-    /*
+
     inner class getOpenMarkers : AsyncTask<Void, Int, Boolean>() {
 
         override fun doInBackground(vararg p0: Void?): Boolean {
@@ -277,7 +271,7 @@ class MainActivity : AppCompatActivity() {
             var input: InputStream? = null
 
             try {
-                var url = URL("http://chargepoints.dft.gov.uk/api/retrieve/registry/format/json")
+                var url = URL("https://api.openchargemap.io/v3/poi/?output=json&countrycode=GB&maxresults=500")
                 //Open connection
                 urlConnection = url.openConnection() as HttpURLConnection
                 input = BufferedInputStream(urlConnection.inputStream)
@@ -288,11 +282,7 @@ class MainActivity : AppCompatActivity() {
 
             //Convert stream into a usable string
 
-            println(input)
-
             var response: String = convertStreamToString(input)
-
-            println(response)
 
             try {
 
@@ -300,70 +290,91 @@ class MainActivity : AppCompatActivity() {
 
                 var jarry = JSONArray(response)
 
+                var lastLoc = ""
+
+
+
                 for (i in 0..(jarry.length()) -1) {
                     var deviceObject: JSONObject = jarry.get(i) as JSONObject
 
-                    val locationid = deviceObject.get("ID").toString()
-
-                    var addressObj: JSONObject =
-                        deviceObject.get("AddressInfo") as JSONObject
-
-                    val street = addressObj.get("Title").toString()
-                    val postcode = addressObj.get("Postcode").toString()
-
-                    var usageObj: JSONObject =
-                        deviceObject.get("UsageType") as JSONObject
-
-                    val payment = usageObj.get("IsPayAtLocation").toString()
-                    val subscription = usageObj.get("IsMembershipRequired").toString()
-
-                    val parkingpayment = deviceObject.get("ParkingFeesFlag").toString()
-                    val parkingpaymentdetails = deviceObject.get("ParkingFeesDetails").toString()
-                    val onstreet = deviceObject.get("OnStreetFlag").toString()
-
-                    val latitude = deviceObject.get("Latitude").toString()
-                    val longitude = deviceObject.get("Longitude").toString()
-
-                    var addressObject: JSONObject = markerObject.get("Address") as JSONObject
+                    val locationid = deviceObject.get("UUID").toString()
 
 
+                    if (locationid.equals(lastLoc)) {
 
-                    var connectorObject : JSONObject = connArray.get(i) as JSONObject
+                        println(lastLoc)
+                    }
+                    else{
+                        lastLoc = locationid
 
-                    val outputkw = connectorObject.get("RatedOutputkW").toString()
-                    val outputvoltage = connectorObject.get("RatedOutputVoltage").toString()
-                    val outputcurrent = connectorObject.get("RatedOutputCurrent").toString()
-                    val chargemethod = connectorObject.get("ChargeMethod").toString()
-                    val service = connectorObject.get("ChargePointStatus").toString()
+                        var addressObj: JSONObject =
+                            deviceObject.get("AddressInfo") as JSONObject
 
-                    val con = Connector(locationid,
-                        0,
-                        outputkw,
-                        outputvoltage,
-                        outputcurrent,
-                        chargemethod,
-                        service)
+                        val street = addressObj.get("Title").toString()
+                        val postcode = addressObj.get("Postcode").toString()
+                        val locationname = "N/A"
+                        val paymentdetails = "N/A"
+                        val subscriptiondetails = "N/A"
 
-                    connectors.add(con)
+                        var usageObj: JSONObject =
+                            deviceObject.get("UsageType") as JSONObject
 
-                    val loc = Location(
-                        locationid,
-                        locationname,
-                        latitude,
-                        longitude,
-                        street,
-                        postcode,
-                        payment,
-                        paymentdetails,
-                        subscription,
-                        subscriptiondetails,
-                        parkingpayment,
-                        parkingpaymentdetails,
-                        onstreet
-                    )
+                        val payment = usageObj.get("IsPayAtLocation").toString()
+                        val subscription = usageObj.get("IsMembershipRequired").toString()
 
-                    locations.add(loc)
+                        val parkingpayment = "N/A"
+                        val parkingpaymentdetails = "N/A"
+                        val onstreet = "N/A"
 
+                        var addressObject: JSONObject =
+                            deviceObject.get("AddressInfo") as JSONObject
+
+                        val latitude = addressObject.get("Latitude").toString()
+                        val longitude = addressObject.get("Longitude").toString()
+
+                        var connArray = deviceObject.getJSONArray("Connections")
+
+                        var connObject: JSONObject = connArray.get(0) as JSONObject
+
+                        var chargeObj = connObject.get("CurrentType") as JSONObject
+
+                        var chargemethod = chargeObj.get("Title").toString()
+
+                        val outputkw = connObject.get("PowerKW").toString()
+                        val outputvoltage = connObject.get("Voltage").toString()
+                        val outputcurrent = "N/A"
+                        val service = "N/A"
+
+                        val con = Connector(
+                            locationid,
+                            0,
+                            outputkw,
+                            outputvoltage,
+                            outputcurrent,
+                            chargemethod,
+                            service
+                        )
+
+                        connectors.add(con)
+
+                        val loc = Location(
+                            locationid,
+                            locationname,
+                            latitude,
+                            longitude,
+                            street,
+                            postcode,
+                            payment,
+                            paymentdetails,
+                            subscription,
+                            subscriptiondetails,
+                            parkingpayment,
+                            parkingpaymentdetails,
+                            onstreet
+                        )
+
+                        locations.add(loc)
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -379,12 +390,13 @@ class MainActivity : AppCompatActivity() {
             insertConnectors()
 
 
-            viewPager!!.setCurrentItem(1)
+            adapter?.addFragment(FragmentOne(), "Fragment One")
+
+            viewPager?.adapter = adapter
+            setViewPager(1)
 
         }
-    }*/
-
-
+    }
 
     fun insertConnectors(){
 

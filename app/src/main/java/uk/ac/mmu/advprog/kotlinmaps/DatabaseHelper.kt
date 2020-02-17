@@ -74,7 +74,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val db = this.writableDatabase
         var query = ""
         var timestamp = System.currentTimeMillis()
-        var source = 1
+        var source = 2
 
         db.beginTransaction()
 
@@ -87,6 +87,24 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
             query = "UPDATE config SET schedule = '$schedule'; UPDATE config SET timestamp = '$timestamp'"
             println(query)
         }
+        db.execSQL(query)
+        db.setTransactionSuccessful()
+        db.endTransaction()
+    }
+
+    fun setTimestamp(){
+        val db = this.writableDatabase
+        var query = ""
+        var timestamp = System.currentTimeMillis()
+
+
+        db.beginTransaction()
+
+
+
+        query = "UPDATE config SET timestamp = '$timestamp'"
+        println(query)
+
         db.execSQL(query)
         db.setTransactionSuccessful()
         db.endTransaction()
@@ -161,34 +179,6 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
     }
 
-
-    fun insertConnector(con: Connector) {
-
-        var content = ContentValues()
-
-        content.put("locationid", con.locationid)
-        content.put("connectorid", con.connectorid)
-        content.put("outputkw", con.outputkw)
-        content.put("outputvoltage", con.outputvoltage)
-        content.put("outputcurrent", con.outputcurrent)
-        content.put("chargemethod", con.chargemethod)
-        content.put("service", con.service)
-
-        var result = db.insert(TABLE_NAME_1, null, content)
-
-        // Result return : 1 = success, -1 = fail
-
-        var fail: Long = -1
-        var success: Long = 1
-
-        if (result == success) {
-            println("Data Inserted Successfully")
-        } else if (result == fail) {
-            println("Data Failed To Be Inserted")
-        }
-
-    }
-
     fun insertLocations(loc : ArrayList<Location>){
         var content = ContentValues()
 
@@ -197,6 +187,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         db.beginTransaction()
 
         for(item in loc){
+
             content.put("locationid", item.locationid)
             content.put("locationname", item.locationname)
             content.put("latitude", item.latitude)
@@ -210,6 +201,8 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
             content.put("parkingpayment", item.parkingpayment)
             content.put("parkingpaymentdetails", item.parkingpaymentdetails)
             content.put("onstreet", item.onstreet)
+
+            println(item.toString())
 
             var result = db.insert(TABLE_NAME_2, null, content)
 
@@ -228,6 +221,8 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         db.setTransactionSuccessful()
         db.endTransaction()
         db.close()
+
+        setTimestamp()
     }
 
     fun insertConnectors(con : ArrayList<Connector>){
@@ -270,39 +265,6 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         db.close()
     }
 
-    fun insertLocation(loc: Location) {
-        var content = ContentValues()
-
-
-
-        content.put("locationid", loc.locationid)
-        content.put("locationname", loc.locationname)
-        content.put("latitude", loc.latitude)
-        content.put("longitude", loc.longitude)
-        content.put("street", loc.street)
-        content.put("postcode", loc.postcode)
-        content.put("payment", loc.payment)
-        content.put("paymentdetails", loc.paymentdetails)
-        content.put("subscription", loc.subscription)
-        content.put("subscriptiondetails", loc.subscriptiondetails)
-        content.put("parkingpayment", loc.parkingpayment)
-        content.put("parkingpaymentdetails", loc.parkingpaymentdetails)
-        content.put("onstreet", loc.onstreet)
-
-        var result = db.insert(TABLE_NAME_2, null, content)
-
-        // Result return : 1 = success, -1 = fail
-
-        var success: Long = -1
-        var fail: Long = 1
-
-        if (result == success) {
-            println("Data Inserted Successfully")
-        } else if (result == fail) {
-            println("Data Failed To Be Inserted")
-        }
-
-    }
 
     fun getSinglePhase(onStreet: Boolean, isFree: Boolean): ArrayList<Location> {
         var locations = ArrayList<Location>()
@@ -340,33 +302,67 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
     fun getDC(onStreet: Boolean, isFree: Boolean): ArrayList<Location> {
         var locations = ArrayList<Location>()
-        var query =
-            "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
-                    "WHERE chargemethod = 'DC' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
-        var db = this.writableDatabase
-        var cursor: Cursor = db.rawQuery(query, null)
 
-        if (cursor.moveToNext()) {
-            do {
-                var loc = Location(
-                    cursor.getString(cursor.getColumnIndex("locationid"))
-                    , cursor.getString(cursor.getColumnIndex("locationname"))
-                    , cursor.getString(cursor.getColumnIndex("latitude"))
-                    , cursor.getString(cursor.getColumnIndex("longitude"))
-                    , cursor.getString(cursor.getColumnIndex("street"))
-                    , cursor.getString(cursor.getColumnIndex("postcode"))
-                    , cursor.getString(cursor.getColumnIndex("payment"))
-                    , cursor.getString(cursor.getColumnIndex("paymentdetails"))
-                    , cursor.getString(cursor.getColumnIndex("subscription"))
-                    , cursor.getString(cursor.getColumnIndex("subscriptiondetails"))
-                    , cursor.getString(cursor.getColumnIndex("parkingpayment"))
-                    , cursor.getString(cursor.getColumnIndex("parkingpaymentdetails"))
-                    , cursor.getString(cursor.getColumnIndex("onstreet"))
-                )
+        if(getSource() == 1) {
+            var query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'DC' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
+            var db = this.writableDatabase
+            var cursor: Cursor = db.rawQuery(query, null)
 
-                locations.add(loc)
+            if (cursor.moveToNext()) {
+                do {
+                    var loc = Location(
+                        cursor.getString(cursor.getColumnIndex("locationid"))
+                        , cursor.getString(cursor.getColumnIndex("locationname"))
+                        , cursor.getString(cursor.getColumnIndex("latitude"))
+                        , cursor.getString(cursor.getColumnIndex("longitude"))
+                        , cursor.getString(cursor.getColumnIndex("street"))
+                        , cursor.getString(cursor.getColumnIndex("postcode"))
+                        , cursor.getString(cursor.getColumnIndex("payment"))
+                        , cursor.getString(cursor.getColumnIndex("paymentdetails"))
+                        , cursor.getString(cursor.getColumnIndex("subscription"))
+                        , cursor.getString(cursor.getColumnIndex("subscriptiondetails"))
+                        , cursor.getString(cursor.getColumnIndex("parkingpayment"))
+                        , cursor.getString(cursor.getColumnIndex("parkingpaymentdetails"))
+                        , cursor.getString(cursor.getColumnIndex("onstreet"))
+                    )
 
-            } while (cursor.moveToNext())
+                    locations.add(loc)
+
+                } while (cursor.moveToNext())
+            }
+        }
+        else{
+            var query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'DC' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
+            var db = this.writableDatabase
+            var cursor: Cursor = db.rawQuery(query, null)
+
+            if (cursor.moveToNext()) {
+                do {
+                    var loc = Location(
+                        cursor.getString(cursor.getColumnIndex("locationid"))
+                        , cursor.getString(cursor.getColumnIndex("locationname"))
+                        , cursor.getString(cursor.getColumnIndex("latitude"))
+                        , cursor.getString(cursor.getColumnIndex("longitude"))
+                        , cursor.getString(cursor.getColumnIndex("street"))
+                        , cursor.getString(cursor.getColumnIndex("postcode"))
+                        , cursor.getString(cursor.getColumnIndex("payment"))
+                        , cursor.getString(cursor.getColumnIndex("paymentdetails"))
+                        , cursor.getString(cursor.getColumnIndex("subscription"))
+                        , cursor.getString(cursor.getColumnIndex("subscriptiondetails"))
+                        , cursor.getString(cursor.getColumnIndex("parkingpayment"))
+                        , cursor.getString(cursor.getColumnIndex("parkingpaymentdetails"))
+                        , cursor.getString(cursor.getColumnIndex("onstreet"))
+                    )
+
+                    locations.add(loc)
+
+                } while (cursor.moveToNext())
+            }
+
         }
         println(locations.size)
         return locations

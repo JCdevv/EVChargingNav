@@ -90,9 +90,16 @@ class ConfigFragment : Fragment() {
             else{
                 if(govCheck.isChecked){
                     db.setSource(1)
+                    db.emptyTables()
+                    var gm = MainActivity().getMarkers()
+                    gm.execute()
+
                 }
                 else if(openCheck.isChecked){
                     db.setSource(2)
+                    db.emptyTables()
+                    var gm = MainActivity().getOpenMarkers()
+                    gm.execute()
                 }
             }
 
