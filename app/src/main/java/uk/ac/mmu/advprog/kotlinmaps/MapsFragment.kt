@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.android.volley.Request
@@ -36,9 +37,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private lateinit var currentLoc: LatLng
     private lateinit var destLoc: LatLng
     private lateinit var mMap: GoogleMap
-    private lateinit var directionsApiClient: DirectionsApiClient
     private var API_KEY = ""
-
 
     var onStreet = false
     var isFree = false
@@ -66,12 +65,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         mMapView.onResume()
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity as Context)
-
-        directionsApiClient = DirectionsApiClient(
-            apiKey = API_KEY,
-            logHttp = true
-        )
-
 
         return v
 

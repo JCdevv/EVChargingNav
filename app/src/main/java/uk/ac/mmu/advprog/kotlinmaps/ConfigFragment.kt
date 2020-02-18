@@ -11,13 +11,10 @@ import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
-
-
 class ConfigFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view : View = inflater.inflate(R.layout.fragment_config,container,false)
-
 
         //RENAME BELOW
         var dailyCheck : CheckBox = view.findViewById(R.id.checkBox1)
@@ -28,8 +25,6 @@ class ConfigFragment : Fragment() {
         var scheduleSubmit : Button = view.findViewById(R.id.submitButton)
         var subBut2 : Button = view.findViewById(R.id.button2)
         var checkCount = 0;
-
-
 
         dailyCheck.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
@@ -91,6 +86,11 @@ class ConfigFragment : Fragment() {
             else{
                 if(govCheck.isChecked){
                     db.setSource(1)
+
+                    var fragTransation = fragmentManager!!.beginTransaction()
+                    fragTransation.replace(android.R.id.content,LoadingFragment())
+                    fragTransation.commit()
+
                     db.emptyTables()
                     var gm = (activity as MainActivity).getMarkers()
                     gm.execute()
@@ -99,6 +99,9 @@ class ConfigFragment : Fragment() {
                 else if(openCheck.isChecked){
                     db.setSource(2)
 
+                    var fragTransation = fragmentManager!!.beginTransaction()
+                    fragTransation.replace(android.R.id.content,LoadingFragment())
+                    fragTransation.commit()
 
                     db.emptyTables()
                     var gm = (activity as MainActivity).getOpenMarkers()

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.format.DateUtils
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.ViewPager
 import com.google.gson.JsonObject
 import org.json.JSONArray
@@ -25,24 +26,25 @@ class MainActivity : AppCompatActivity() {
     var sectionsStatePagerAdapter: SectionsStatePagerAdapter? = null
     var viewPager: ViewPager? = null
     var adapter: SectionsStatePagerAdapter? = null
+    var fragmentManager : FragmentManager? = null
 
     var connectors = arrayListOf<Connector>()
     var locations = arrayListOf<Location>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        sectionsStatePagerAdapter = SectionsStatePagerAdapter((supportFragmentManager))
-        viewPager = findViewById(R.id.container)
+        fragmentManager = supportFragmentManager
 
+        var fragTransation = fragmentManager!!.beginTransaction()
+        fragTransation.replace(android.R.id.content,LoadingFragment())
+        fragTransation.commit()
 
         var DB  = DatabaseHelper(applicationContext)
 
-
         if(DB.getTimestamp() == ""){
-            //var GM = getMarkers()
-            //GM.execute()
+            var GM = getMarkers()
+            GM.execute()
 
             DB.setUpdate(0)
         }
@@ -57,7 +59,6 @@ class MainActivity : AppCompatActivity() {
 
         println(result)
 
-        setupViewPager(viewPager)
 
         if(result > Integer.parseInt(DB.getSchedule())){
 
@@ -73,10 +74,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
         else{
-            adapter?.addFragment(FragmentOne(), "Fragment One")
 
-            viewPager?.adapter = adapter
-            setViewPager(1)
+            var fragTransation = fragmentManager!!.beginTransaction()
+            fragTransation.replace(android.R.id.content,FragmentOne())
+            fragTransation.commit()
+
         }
     }
 
@@ -114,24 +116,6 @@ class MainActivity : AppCompatActivity() {
         }
         return if (negative) days * -1 else days
     }
-
-    //Opens requested fragment
-    fun setViewPager(fragmentNumber: Int) {
-        viewPager?.currentItem = fragmentNumber
-    }
-
-    //Sets up view pager, inflates fragment one
-    fun setupViewPager(vp: ViewPager?) {
-        adapter = SectionsStatePagerAdapter(supportFragmentManager)
-
-        adapter?.addFragment(LoadingFragment(),"Loading Fragment")
-
-
-
-        viewPager?.adapter = adapter
-    }
-
-
 
     inner class getMarkers : AsyncTask<Void, Int, Boolean>() {
 
@@ -253,10 +237,9 @@ class MainActivity : AppCompatActivity() {
             insertLocations()
             insertConnectors()
 
-            adapter?.addFragment(FragmentOne(), "Fragment One")
-
-            viewPager?.adapter = adapter
-            setViewPager(1)
+            var fragTransation = fragmentManager!!.beginTransaction()
+            fragTransation.replace(android.R.id.content,FragmentOne())
+            fragTransation.commit()
 
 
         }
@@ -394,10 +377,9 @@ class MainActivity : AppCompatActivity() {
             insertConnectors()
 
 
-            adapter?.addFragment(FragmentOne(), "Fragment One")
-
-            viewPager?.adapter = adapter
-            setViewPager(1)
+            var fragTransation = fragmentManager!!.beginTransaction()
+            fragTransation.replace(android.R.id.content,FragmentOne())
+            fragTransation.commit()
 
         }
     }

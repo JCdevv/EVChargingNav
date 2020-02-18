@@ -58,23 +58,16 @@ class FragmentOne : Fragment() {
 
         btnFrag.setOnClickListener( View.OnClickListener {
 
-            var mp = this.activity as MainActivity
+            var fragTransation = fragmentManager!!.beginTransaction()
+            fragTransation.replace(android.R.id.content,MapsFragment()).addToBackStack(null).commit()
 
-            mp.adapter?.addFragment(MapsFragment(), "Fragment Two")
-
-            mp.viewPager?.adapter = mp.adapter
-            mp.setViewPager(1)
 
         })
 
         btnFrag2.setOnClickListener( View.OnClickListener {
 
-            var mp = this.activity as MainActivity
-
-            mp.adapter?.addFragment(ConfigFragment(), "Fragment Three")
-
-            mp.viewPager?.adapter = mp.adapter
-            mp.setViewPager(2)
+            var fragTransation = fragmentManager!!.beginTransaction()
+            fragTransation.replace(android.R.id.content,ConfigFragment()).addToBackStack(null).commit()
 
         })
 
