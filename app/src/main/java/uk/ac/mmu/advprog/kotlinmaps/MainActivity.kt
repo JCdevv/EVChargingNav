@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         sectionsStatePagerAdapter = SectionsStatePagerAdapter((supportFragmentManager))
         viewPager = findViewById(R.id.container)
 
+
         var DB  = DatabaseHelper(applicationContext)
 
 
@@ -58,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
         setupViewPager(viewPager)
 
-        if(result == Integer.parseInt(DB.getSchedule())){
+        if(result > Integer.parseInt(DB.getSchedule())){
 
             DB.emptyTables()
 

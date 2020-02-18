@@ -14,8 +14,6 @@ val TABLE_NAME_2 = "location"
 
 class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, null,1) {
 
-    val db = this.writableDatabase
-
     //If db does not exist, onCreate is ran and tables are created.
     override fun onCreate(p0: SQLiteDatabase?) {
         var connectorCreate =

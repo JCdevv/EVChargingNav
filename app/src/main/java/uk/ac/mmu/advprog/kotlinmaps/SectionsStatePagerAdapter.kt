@@ -3,8 +3,8 @@ package uk.ac.mmu.advprog.kotlinmaps
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import java.util.*
 
-import java.util.ArrayList
 
 class SectionsStatePagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 

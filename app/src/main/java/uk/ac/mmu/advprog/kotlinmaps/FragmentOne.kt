@@ -9,7 +9,6 @@ import android.widget.Switch
 import androidx.fragment.app.Fragment
 import android.widget.CompoundButton
 
-
 class FragmentOne : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

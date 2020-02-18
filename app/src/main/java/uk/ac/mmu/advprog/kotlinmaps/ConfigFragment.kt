@@ -29,6 +29,8 @@ class ConfigFragment : Fragment() {
         var subBut2 : Button = view.findViewById(R.id.button2)
         var checkCount = 0;
 
+
+
         dailyCheck.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
                 checkCount++
@@ -76,7 +78,6 @@ class ConfigFragment : Fragment() {
             }else{
                 Toast.makeText(this.context,"Please Only Choose One Option",Toast.LENGTH_SHORT)
             }
-
         })
 
         subBut2.setOnClickListener( View.OnClickListener {
@@ -91,21 +92,21 @@ class ConfigFragment : Fragment() {
                 if(govCheck.isChecked){
                     db.setSource(1)
                     db.emptyTables()
-                    var gm = MainActivity().getMarkers()
+                    var gm = (activity as MainActivity).getMarkers()
                     gm.execute()
 
                 }
                 else if(openCheck.isChecked){
                     db.setSource(2)
+
+
                     db.emptyTables()
-                    var gm = MainActivity().getOpenMarkers()
+                    var gm = (activity as MainActivity).getOpenMarkers()
                     gm.execute()
+
                 }
             }
-
         })
-
-
         return view
     }
 }
