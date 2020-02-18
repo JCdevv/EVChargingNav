@@ -267,34 +267,70 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
 
     fun getSinglePhase(onStreet: Boolean, isFree: Boolean): ArrayList<Location> {
+
+        // AC (Single-Phase)
         var locations = ArrayList<Location>()
-        var query =
-            "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
-                    "WHERE chargemethod = 'Single Phase AC' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
-        var db = this.writableDatabase
-        var cursor: Cursor = db.rawQuery(query, null)
 
-        if (cursor.moveToNext()) {
-            do {
-                var loc = Location(
-                    cursor.getString(cursor.getColumnIndex("locationid"))
-                    , cursor.getString(cursor.getColumnIndex("locationname"))
-                    , cursor.getString(cursor.getColumnIndex("latitude"))
-                    , cursor.getString(cursor.getColumnIndex("longitude"))
-                    , cursor.getString(cursor.getColumnIndex("street"))
-                    , cursor.getString(cursor.getColumnIndex("postcode"))
-                    , cursor.getString(cursor.getColumnIndex("payment"))
-                    , cursor.getString(cursor.getColumnIndex("paymentdetails"))
-                    , cursor.getString(cursor.getColumnIndex("subscription"))
-                    , cursor.getString(cursor.getColumnIndex("subscriptiondetails"))
-                    , cursor.getString(cursor.getColumnIndex("parkingpayment"))
-                    , cursor.getString(cursor.getColumnIndex("parkingpaymentdetails"))
-                    , cursor.getString(cursor.getColumnIndex("onstreet"))
-                )
+        if(getSource() == 1) {
+            var query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'AC (Single-Phase)' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
+            var db = this.writableDatabase
+            var cursor: Cursor = db.rawQuery(query, null)
 
-                locations.add(loc)
+            if (cursor.moveToNext()) {
+                do {
+                    var loc = Location(
+                        cursor.getString(cursor.getColumnIndex("locationid"))
+                        , cursor.getString(cursor.getColumnIndex("locationname"))
+                        , cursor.getString(cursor.getColumnIndex("latitude"))
+                        , cursor.getString(cursor.getColumnIndex("longitude"))
+                        , cursor.getString(cursor.getColumnIndex("street"))
+                        , cursor.getString(cursor.getColumnIndex("postcode"))
+                        , cursor.getString(cursor.getColumnIndex("payment"))
+                        , cursor.getString(cursor.getColumnIndex("paymentdetails"))
+                        , cursor.getString(cursor.getColumnIndex("subscription"))
+                        , cursor.getString(cursor.getColumnIndex("subscriptiondetails"))
+                        , cursor.getString(cursor.getColumnIndex("parkingpayment"))
+                        , cursor.getString(cursor.getColumnIndex("parkingpaymentdetails"))
+                        , cursor.getString(cursor.getColumnIndex("onstreet"))
+                    )
 
-            } while (cursor.moveToNext())
+                    locations.add(loc)
+
+                } while (cursor.moveToNext())
+            }
+        }
+        else{
+            var query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'DC' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
+            var db = this.writableDatabase
+            var cursor: Cursor = db.rawQuery(query, null)
+
+            if (cursor.moveToNext()) {
+                do {
+                    var loc = Location(
+                        cursor.getString(cursor.getColumnIndex("locationid"))
+                        , cursor.getString(cursor.getColumnIndex("locationname"))
+                        , cursor.getString(cursor.getColumnIndex("latitude"))
+                        , cursor.getString(cursor.getColumnIndex("longitude"))
+                        , cursor.getString(cursor.getColumnIndex("street"))
+                        , cursor.getString(cursor.getColumnIndex("postcode"))
+                        , cursor.getString(cursor.getColumnIndex("payment"))
+                        , cursor.getString(cursor.getColumnIndex("paymentdetails"))
+                        , cursor.getString(cursor.getColumnIndex("subscription"))
+                        , cursor.getString(cursor.getColumnIndex("subscriptiondetails"))
+                        , cursor.getString(cursor.getColumnIndex("parkingpayment"))
+                        , cursor.getString(cursor.getColumnIndex("parkingpaymentdetails"))
+                        , cursor.getString(cursor.getColumnIndex("onstreet"))
+                    )
+
+                    locations.add(loc)
+
+                } while (cursor.moveToNext())
+            }
+
         }
         println(locations.size)
         return locations
@@ -369,34 +405,70 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
     }
     
     fun getTriplePhase(onStreet: Boolean, isFree: Boolean): ArrayList<Location> {
+
+        //AC (Three-Phase)
+
         var locations = ArrayList<Location>()
-        var query =
-            "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
-                    "WHERE chargemethod = 'Three Phase AC' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
-        var db = this.writableDatabase
-        var cursor: Cursor = db.rawQuery(query, null)
+        if(getSource() == 1) {
+            var query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'AC (Three-Phase)' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
+            var db = this.writableDatabase
+            var cursor: Cursor = db.rawQuery(query, null)
 
-        if (cursor.moveToNext()) {
-            do {
-                var loc = Location(
-                    cursor.getString(cursor.getColumnIndex("locationid"))
-                    , cursor.getString(cursor.getColumnIndex("locationname"))
-                    , cursor.getString(cursor.getColumnIndex("latitude"))
-                    , cursor.getString(cursor.getColumnIndex("longitude"))
-                    , cursor.getString(cursor.getColumnIndex("street"))
-                    , cursor.getString(cursor.getColumnIndex("postcode"))
-                    , cursor.getString(cursor.getColumnIndex("payment"))
-                    , cursor.getString(cursor.getColumnIndex("paymentdetails"))
-                    , cursor.getString(cursor.getColumnIndex("subscription"))
-                    , cursor.getString(cursor.getColumnIndex("subscriptiondetails"))
-                    , cursor.getString(cursor.getColumnIndex("parkingpayment"))
-                    , cursor.getString(cursor.getColumnIndex("parkingpaymentdetails"))
-                    , cursor.getString(cursor.getColumnIndex("onstreet"))
-                )
+            if (cursor.moveToNext()) {
+                do {
+                    var loc = Location(
+                        cursor.getString(cursor.getColumnIndex("locationid"))
+                        , cursor.getString(cursor.getColumnIndex("locationname"))
+                        , cursor.getString(cursor.getColumnIndex("latitude"))
+                        , cursor.getString(cursor.getColumnIndex("longitude"))
+                        , cursor.getString(cursor.getColumnIndex("street"))
+                        , cursor.getString(cursor.getColumnIndex("postcode"))
+                        , cursor.getString(cursor.getColumnIndex("payment"))
+                        , cursor.getString(cursor.getColumnIndex("paymentdetails"))
+                        , cursor.getString(cursor.getColumnIndex("subscription"))
+                        , cursor.getString(cursor.getColumnIndex("subscriptiondetails"))
+                        , cursor.getString(cursor.getColumnIndex("parkingpayment"))
+                        , cursor.getString(cursor.getColumnIndex("parkingpaymentdetails"))
+                        , cursor.getString(cursor.getColumnIndex("onstreet"))
+                    )
 
-                locations.add(loc)
+                    locations.add(loc)
 
-            } while (cursor.moveToNext())
+                } while (cursor.moveToNext())
+            }
+        }
+        else{
+            var query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'DC' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
+            var db = this.writableDatabase
+            var cursor: Cursor = db.rawQuery(query, null)
+
+            if (cursor.moveToNext()) {
+                do {
+                    var loc = Location(
+                        cursor.getString(cursor.getColumnIndex("locationid"))
+                        , cursor.getString(cursor.getColumnIndex("locationname"))
+                        , cursor.getString(cursor.getColumnIndex("latitude"))
+                        , cursor.getString(cursor.getColumnIndex("longitude"))
+                        , cursor.getString(cursor.getColumnIndex("street"))
+                        , cursor.getString(cursor.getColumnIndex("postcode"))
+                        , cursor.getString(cursor.getColumnIndex("payment"))
+                        , cursor.getString(cursor.getColumnIndex("paymentdetails"))
+                        , cursor.getString(cursor.getColumnIndex("subscription"))
+                        , cursor.getString(cursor.getColumnIndex("subscriptiondetails"))
+                        , cursor.getString(cursor.getColumnIndex("parkingpayment"))
+                        , cursor.getString(cursor.getColumnIndex("parkingpaymentdetails"))
+                        , cursor.getString(cursor.getColumnIndex("onstreet"))
+                    )
+
+                    locations.add(loc)
+
+                } while (cursor.moveToNext())
+            }
+
         }
         println(locations.size)
         return locations

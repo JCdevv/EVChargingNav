@@ -92,10 +92,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         dc = Data.dc
         var locationmarkers = ArrayList<uk.ac.mmu.advprog.kotlinmaps.Location>()
 
-
-        println(onStreet.toString() + isFree.toString())
-        println(onePhase.toString())
-
         if (onePhase) {
             locationmarkers = db.getSinglePhase(onStreet, isFree)
         } else if (threePhase) {
@@ -110,8 +106,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         var markerLocation = Location("")
 
 
+        println("HERE WE ARE99999")
 
         for (item in locationmarkers) {
+
+            println("HERE WE ARE")
+            println(item.locationid)
 
             markerLocation.longitude = item.longitude.toDouble()
             markerLocation.latitude = item.latitude.toDouble()
@@ -127,8 +127,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.setOnMarkerClickListener(this)
-
-
 
         setUpMap(mMap)
 

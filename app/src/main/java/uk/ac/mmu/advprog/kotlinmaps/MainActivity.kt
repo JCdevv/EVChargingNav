@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         setupViewPager(viewPager)
 
-        if(result > Integer.parseInt(DB.getSchedule())){
+        if(result == Integer.parseInt(DB.getSchedule())){
 
             DB.emptyTables()
 
@@ -324,7 +324,10 @@ class MainActivity : AppCompatActivity() {
 
                         val parkingpayment = "N/A"
                         val parkingpaymentdetails = "N/A"
-                        val onstreet = "N/A"
+
+                        //No strong indicator for whether something is onstreet, so access key required string used as this very likely
+                        //Indicates if something is onstreet, or in a private location
+                        val onstreet = usageObj.get("IsAccessKeyRequired").toString()
 
                         var addressObject: JSONObject =
                             deviceObject.get("AddressInfo") as JSONObject
