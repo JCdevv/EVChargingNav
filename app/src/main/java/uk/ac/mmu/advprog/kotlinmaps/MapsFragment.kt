@@ -44,6 +44,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     var onePhase = false
     var threePhase = false
     var dc = false
+    var options = PolylineOptions()
+    var route : Polyline ?= null
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -73,6 +75,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
 
+        options.color(Color.RED)
+        options.width(5f)
+
         mMap = googleMap
         var context: Context = activity!!.applicationContext
         var db = DatabaseHelper(context)
@@ -97,13 +102,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         var markerLocation = Location("")
 
-
-        println("HERE WE ARE99999")
-
         for (item in locationmarkers) {
-
-            println("HERE WE ARE")
-            println(item.locationid)
 
             markerLocation.longitude = item.longitude.toDouble()
             markerLocation.latitude = item.latitude.toDouble()
@@ -126,6 +125,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
 
     fun getPoints(current : LatLng, destination : LatLng){
+
+        route?.remove()
 
         val queue = Volley.newRequestQueue(activity!!.applicationContext)
 
@@ -159,16 +160,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                             }
                         }
 
-                        var options = PolylineOptions()
-                        options.color(Color.RED)
-                        options.width(5f)
 
                         for (item in coordinates) {
                             var current = LatLng(item.latitude, item.longitude)
                             options.add(current)
                         }
 
-                        var route : Polyline = mMap.addPolyline(options)
+                        route = mMap.addPolyline(options)
 
 
                     }
@@ -187,6 +185,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
 
     override fun onMarkerClick(p0: Marker?): Boolean {
+
+        options.points.clear()
 
         fusedLocationClient.lastLocation.addOnSuccessListener(MainActivity()) { location ->
             var current = LatLng(location.latitude,location.longitude)

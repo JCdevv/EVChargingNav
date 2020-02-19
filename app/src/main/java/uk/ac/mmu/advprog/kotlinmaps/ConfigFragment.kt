@@ -86,28 +86,16 @@ class ConfigFragment : Fragment() {
             else{
                 if(govCheck.isChecked){
                     db.setSource(1)
-
-                    var fragTransation = fragmentManager!!.beginTransaction()
-                    fragTransation.replace(android.R.id.content,LoadingFragment())
-                    fragTransation.commit()
-
-                    db.emptyTables()
-                    var gm = (activity as MainActivity).getMarkers()
-                    gm.execute()
-
                 }
                 else if(openCheck.isChecked){
                     db.setSource(2)
-
-                    var fragTransation = fragmentManager!!.beginTransaction()
-                    fragTransation.replace(android.R.id.content,LoadingFragment())
-                    fragTransation.commit()
-
-                    db.emptyTables()
-                    var gm = (activity as MainActivity).getOpenMarkers()
-                    gm.execute()
-
                 }
+
+                Data.isupdating = true
+
+                var fragTransation = fragmentManager!!.beginTransaction()
+                fragTransation.replace(android.R.id.content,LoadingFragment())
+                fragTransation.commit()
             }
         })
         return view

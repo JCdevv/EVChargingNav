@@ -11,5 +11,6 @@ object Data {
     var onstreet = false
     var isfree = false
     var dc = false
+    var isupdating = false
 
 }
