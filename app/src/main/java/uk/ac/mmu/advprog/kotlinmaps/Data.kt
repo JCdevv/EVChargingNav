@@ -6,11 +6,11 @@ object Data {
     //1 = false
     //2 == true
 
-    var onephase = false
-    var triplephase = false
-    var onstreet = false
-    var isfree = false
-    var dc = false
+    var onephase = 0
+    var triplephase = 0
+    var onstreet = 0
+    var isfree = 0
+    var dc = 0
     var isupdating = false
 
 }

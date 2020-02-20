@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import java.sql.Timestamp
 
 val DB_NAME = "mapinfo"
 val TABLE_NAME_1 = "connector"
@@ -35,6 +34,9 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    //Gets the currently selected data source int.
+    //1 = gov
+    //2 = openapi
     fun getSource() : Int{
         var db = this.writableDatabase
         var source = 0
@@ -55,6 +57,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         return source
     }
 
+    //Updates the chosen data source
     fun setSource(Source : Int){
         val db = this.writableDatabase
         var query = "UPDATE config SET source = $Source"
@@ -68,6 +71,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         db.endTransaction()
     }
 
+    //Sets a new update schedule, and as this is used called if the database is empty, sets default values for schedule and source if needed
     fun setUpdate(schedule : Int){
         val db = this.writableDatabase
         var query = ""
@@ -90,6 +94,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         db.endTransaction()
     }
 
+    //Sets a new timestamp of last time the database was updated
     fun setTimestamp(){
         val db = this.writableDatabase
         var query = ""
@@ -108,6 +113,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         db.endTransaction()
     }
 
+    //Gets the current chosen update schedule
     fun getSchedule() : String{
         var db = this.writableDatabase
         var etag = ""
@@ -129,7 +135,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
     }
 
-
+    //Gets the last time the database was updated
     fun getTimestamp() : String{
         var db = this.writableDatabase
         var timestamp = ""
@@ -151,7 +157,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
     }
 
-
+    //Empties all tables so data can be updated
     fun emptyTables(){
         val db = this.writableDatabase
         var query = "DELETE FROM connector"
@@ -165,6 +171,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
     }
 
+    //
     fun createChargeIDs(con: Connector, id: Int) {
         val db = this.writableDatabase
         var content = ContentValues()
@@ -177,11 +184,13 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
     }
 
+    //Inserts locations retrieved from data source into the database
     fun insertLocations(loc : ArrayList<Location>){
         var content = ContentValues()
 
         val db = this.writableDatabase
 
+        //Makes use of transactions due to a very large amount of inserts. Completes all inserts at once in a single transaction, significantly reducing insert time.
         db.beginTransaction()
 
         for(item in loc){
@@ -220,9 +229,11 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         db.endTransaction()
         db.close()
 
+        //Updates the last updated timestamps
         setTimestamp()
     }
 
+    //Inserts connectors retrieved from data source into the database
     fun insertConnectors(con : ArrayList<Connector>){
         var content = ContentValues()
 
@@ -264,17 +275,75 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
     }
 
 
-    fun getSinglePhase(onStreet: Boolean, isFree: Boolean): ArrayList<Location> {
+    fun getSinglePhase(onStreet: Int, isFree: Int): ArrayList<Location> {
 
         // AC (Single-Phase)
         var locations = ArrayList<Location>()
+        var query = ""
 
+
+        //Below is a series of checks, changing the query based on what filter options were selected by the user, as well as changes the query based on what data source is used
         if(getSource() == 1) {
-            var query =
-                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
-                        "WHERE chargemethod = 'AC (Single-Phase)' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
+            if(onStreet == 2 && isFree == 2){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Single Phase AC' AND payment = 'true' AND onstreet = 'true';"
+            }
+            else if(onStreet == 2 && isFree == 1){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Single Phase AC' AND payment = 'false' AND onstreet = 'true';"
+            }
+            else if(onStreet == 1 && isFree == 2){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Single Phase AC' AND payment = 'true' AND onstreet = 'false';"
+            }
+            else if(onStreet == 1 && isFree == 1){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Single Phase AC' AND payment = 'false' AND onstreet = 'false';"
+            }
+            else if(onStreet == 2 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Single Phase AC' AND onstreet = 'true';"
+            }
+            else if(onStreet == 0 && isFree == 2){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Single Phase AC' AND payment = 'true';"
+            }
+            else if(onStreet == 1 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'DC' AND onstreet = 'false';"
+            }
+            else if(onStreet == 0 && isFree == 1){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Single Phase AC' AND payment = 'false';"
+            }
+            else if(onStreet == 2 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Single Phase AC' AND onstreet = 'true';"
+            }
+            else if(onStreet == 1 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Single Phase AC' AND onstreet = 'false';"
+            }
+            else if(onStreet == 0 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Single Phase AC';"
+            }
+
             var db = this.writableDatabase
             var cursor: Cursor = db.rawQuery(query, null)
+
+            println(query)
 
             if (cursor.moveToNext()) {
                 do {
@@ -300,9 +369,62 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
             }
         }
         else{
-            var query =
-                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
-                        "WHERE chargemethod = 'DC' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
+            //Below is a series of checks, changing the query based on what filter options were selected by the user, as well as changes the query based on what data source is used
+            if(onStreet == 2 && isFree == 2){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Single-Phase)' AND payment = 'true' AND onstreet = 'true';"
+            }
+            else if(onStreet == 2 && isFree == 1){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Single-Phase)' AND payment = 'false' AND onstreet = 'true';"
+            }
+            else if(onStreet == 1 && isFree == 2){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Single-Phase)' AND payment = 'true' AND onstreet = 'false';"
+            }
+            else if(onStreet == 1 && isFree == 1){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Single-Phase)' AND payment = 'false' AND onstreet = 'false';"
+            }
+            else if(onStreet == 2 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Single-Phase)' AND onstreet = 'true';"
+            }
+            else if(onStreet == 1 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC Single Phase' AND onstreet = 'false';"
+            }
+            else if(onStreet == 0 && isFree == 2){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Single-Phase)' AND payment = 'true';"
+            }
+            else if(onStreet == 0 && isFree == 1){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Single-Phase)' AND payment = 'false';"
+            }
+            else if(onStreet == 2 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Single-Phase)' AND onstreet = 'true';"
+            }
+            else if(onStreet == 1 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Single-Phase)' AND onstreet = 'false';"
+            }
+            else if(onStreet == 0 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Single-Phase)';"
+            }
             var db = this.writableDatabase
             var cursor: Cursor = db.rawQuery(query, null)
 
@@ -334,83 +456,164 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         return locations
     }
 
-    fun getDC(onStreet: Boolean, isFree: Boolean): ArrayList<Location> {
+    fun getDC(onStreet: Int, isFree: Int): ArrayList<Location> {
         var locations = ArrayList<Location>()
+        var query = ""
 
-        if(getSource() == 1) {
-            var query =
+        //Below is a series of checks, changing the query based on what filter options were selected by the user
+        //Both data sources use 'DC' , so same queries can be used for both data sets.
+        if(onStreet == 2 && isFree == 2){
+            query =
                 "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
-                        "WHERE chargemethod = 'DC' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
-            var db = this.writableDatabase
-            var cursor: Cursor = db.rawQuery(query, null)
-
-            if (cursor.moveToNext()) {
-                do {
-                    var loc = Location(
-                        cursor.getString(cursor.getColumnIndex("locationid"))
-                        , cursor.getString(cursor.getColumnIndex("locationname"))
-                        , cursor.getString(cursor.getColumnIndex("latitude"))
-                        , cursor.getString(cursor.getColumnIndex("longitude"))
-                        , cursor.getString(cursor.getColumnIndex("street"))
-                        , cursor.getString(cursor.getColumnIndex("postcode"))
-                        , cursor.getString(cursor.getColumnIndex("payment"))
-                        , cursor.getString(cursor.getColumnIndex("paymentdetails"))
-                        , cursor.getString(cursor.getColumnIndex("subscription"))
-                        , cursor.getString(cursor.getColumnIndex("subscriptiondetails"))
-                        , cursor.getString(cursor.getColumnIndex("parkingpayment"))
-                        , cursor.getString(cursor.getColumnIndex("parkingpaymentdetails"))
-                        , cursor.getString(cursor.getColumnIndex("onstreet"))
-                    )
-
-                    locations.add(loc)
-
-                } while (cursor.moveToNext())
-            }
+                        "WHERE chargemethod = 'DC' AND payment = 'true' AND onstreet = 'true';"
         }
-        else{
-            var query =
+        else if(onStreet == 2 && isFree == 1){
+            query =
                 "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
-                        "WHERE chargemethod = 'DC' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
-            var db = this.writableDatabase
-            var cursor: Cursor = db.rawQuery(query, null)
-
-            if (cursor.moveToNext()) {
-                do {
-                    var loc = Location(
-                        cursor.getString(cursor.getColumnIndex("locationid"))
-                        , cursor.getString(cursor.getColumnIndex("locationname"))
-                        , cursor.getString(cursor.getColumnIndex("latitude"))
-                        , cursor.getString(cursor.getColumnIndex("longitude"))
-                        , cursor.getString(cursor.getColumnIndex("street"))
-                        , cursor.getString(cursor.getColumnIndex("postcode"))
-                        , cursor.getString(cursor.getColumnIndex("payment"))
-                        , cursor.getString(cursor.getColumnIndex("paymentdetails"))
-                        , cursor.getString(cursor.getColumnIndex("subscription"))
-                        , cursor.getString(cursor.getColumnIndex("subscriptiondetails"))
-                        , cursor.getString(cursor.getColumnIndex("parkingpayment"))
-                        , cursor.getString(cursor.getColumnIndex("parkingpaymentdetails"))
-                        , cursor.getString(cursor.getColumnIndex("onstreet"))
-                    )
-
-                    locations.add(loc)
-
-                } while (cursor.moveToNext())
-            }
-
+                        "WHERE chargemethod = 'DC' AND payment = 'false' AND onstreet = 'true';"
         }
+        else if(onStreet == 1 && isFree == 2){
+            query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'DC' AND payment = 'true' AND onstreet = 'false';"
+        }
+        else if(onStreet == 1 && isFree == 1){
+            query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'DC' AND payment = 'false' AND onstreet = 'false';"
+        }
+        else if(onStreet == 2 && isFree == 0){
+            query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'DC' AND onstreet = 'true';"
+        }
+        else if(onStreet == 1 && isFree == 0){
+            query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'DC' AND onstreet = 'false';"
+        }
+        else if(onStreet == 0 && isFree == 2){
+            query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'DC' AND payment = 'true';"
+        }
+        else if(onStreet == 0 && isFree == 1){
+            query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'DC' AND payment = 'false';"
+        }
+        else if(onStreet == 2 && isFree == 0){
+            query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'DC' AND onstreet = 'true';"
+        }
+        else if(onStreet == 1 && isFree == 0){
+            query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'DC' AND onstreet = 'false';"
+        }
+        else if(onStreet == 0 && isFree == 0){
+            query =
+                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                        "WHERE chargemethod = 'DC';"
+        }
+
+
+        var db = this.writableDatabase
+        var cursor: Cursor = db.rawQuery(query, null)
+
+        if (cursor.moveToNext()) {
+            do {
+                var loc = Location(
+                    cursor.getString(cursor.getColumnIndex("locationid"))
+                    , cursor.getString(cursor.getColumnIndex("locationname"))
+                    , cursor.getString(cursor.getColumnIndex("latitude"))
+                    , cursor.getString(cursor.getColumnIndex("longitude"))
+                    , cursor.getString(cursor.getColumnIndex("street"))
+                    , cursor.getString(cursor.getColumnIndex("postcode"))
+                    , cursor.getString(cursor.getColumnIndex("payment"))
+                    , cursor.getString(cursor.getColumnIndex("paymentdetails"))
+                    , cursor.getString(cursor.getColumnIndex("subscription"))
+                    , cursor.getString(cursor.getColumnIndex("subscriptiondetails"))
+                    , cursor.getString(cursor.getColumnIndex("parkingpayment"))
+                    , cursor.getString(cursor.getColumnIndex("parkingpaymentdetails"))
+                    , cursor.getString(cursor.getColumnIndex("onstreet"))
+                )
+
+                locations.add(loc)
+
+            } while (cursor.moveToNext())
+        }
+
         println(locations.size)
         return locations
     }
     
-    fun getTriplePhase(onStreet: Boolean, isFree: Boolean): ArrayList<Location> {
+    fun getTriplePhase(onStreet: Int, isFree: Int): ArrayList<Location> {
 
         //AC (Three-Phase)
 
         var locations = ArrayList<Location>()
+        var query = ""
+        //Below is a series of checks, changing the query based on what filter options were selected by the user, as well as changes the query based on what data source is used
         if(getSource() == 1) {
-            var query =
-                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
-                        "WHERE chargemethod = 'AC (Three-Phase)' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
+
+            if(onStreet == 2 && isFree == 2){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Three Phase AC' AND payment = 'true' AND onstreet = 'true';"
+            }
+            else if(onStreet == 2 && isFree == 1){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Three Phase AC' AND payment = 'false' AND onstreet = 'true';"
+            }
+            else if(onStreet == 1 && isFree == 2){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Three Phase AC' AND payment = 'true' AND onstreet = 'false';"
+            }
+            else if(onStreet == 1 && isFree == 1){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Three Phase AC' AND payment = 'false' AND onstreet = 'false';"
+            }
+            else if(onStreet == 2 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Three Phase AC' AND onstreet = 'true';"
+            }
+            else if(onStreet == 0 && isFree == 2){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Three Phase AC' AND payment = 'true';"
+            }
+            else if(onStreet == 0 && isFree == 1){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Three Phase AC' AND payment = 'false';"
+            }
+            else if(onStreet == 1 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Three Phase AC' AND onstreet = 'false';"
+            }
+            else if(onStreet == 2 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Three Phase AC' AND onstreet = 'true';"
+            }
+            else if(onStreet == 1 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Three Phase AC' AND onstreet = 'false';"
+            }
+            else if(onStreet == 0 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'Three Phase AC';"
+            }
+
             var db = this.writableDatabase
             var cursor: Cursor = db.rawQuery(query, null)
 
@@ -438,9 +641,64 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
             }
         }
         else{
-            var query =
-                "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
-                        "WHERE chargemethod = 'DC' AND payment = '" + isFree.toString() + "' AND onstreet = '" + onStreet.toString() + "';"
+            //Below is a series of checks, changing the query based on what filter options were selected by the user, as well as changes the query based on what data source is used
+            if(onStreet == 2 && isFree == 2){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Three-Phase)' AND payment = 'true' AND onstreet = 'true';"
+            }
+            else if(onStreet == 2 && isFree == 1){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Three-Phase)' AND payment = 'false' AND onstreet = 'true';"
+            }
+            else if(onStreet == 1 && isFree == 2){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Three-Phase)' AND payment = 'true' AND onstreet = 'false';"
+            }
+            else if(onStreet == 1 && isFree == 1){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Three-Phase)' AND payment = 'false' AND onstreet = 'false';"
+            }
+            else if(onStreet == 2 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Three-Phase)' AND onstreet = 'true';"
+            }
+            else if(onStreet == 0 && isFree == 2){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Three-Phase)' AND payment = 'true';"
+            }
+            else if(onStreet == 1 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Three-Phase)' AND onstreet = 'false';"
+            }
+            else if(onStreet == 0 && isFree == 1){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Three-Phase)' AND payment = 'false';"
+            }
+            else if(onStreet == 2 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Three-Phase)' AND onstreet = 'true';"
+            }
+            else if(onStreet == 1 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Three-Phase)' AND onstreet = 'false';"
+            }
+            else if(onStreet == 0 && isFree == 0){
+                query =
+                    "SELECT DISTINCT * FROM connector INNER JOIN location ON connector.locationid = location.locationid " +
+                            "WHERE chargemethod = 'AC (Three-Phase)';"
+            }
+
+
             var db = this.writableDatabase
             var cursor: Cursor = db.rawQuery(query, null)
 
@@ -472,7 +730,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DB_NAME, nul
         return locations
     }
 
-    fun getLocations(onStreet: Boolean, isFree: Boolean): ArrayList<Location> {
+    fun getLocations(onStreet: Int, isFree: Int): ArrayList<Location> {
 
         var locations = arrayListOf<Location>()
         var query = "SELECT * FROM LOCATION WHERE onstreet = '" + onStreet.toString() + "' AND payment ='" +isFree.toString() +"';"

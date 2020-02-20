@@ -16,7 +16,7 @@ class ConfigFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view : View = inflater.inflate(R.layout.fragment_config,container,false)
 
-        //RENAME BELOW
+
         var dailyCheck : CheckBox = view.findViewById(R.id.checkBox1)
         var threeCheck : CheckBox = view.findViewById(R.id.checkBox2)
         var everydayCheck : CheckBox = view.findViewById(R.id.checkBox3)
@@ -26,6 +26,7 @@ class ConfigFragment : Fragment() {
         var subBut2 : Button = view.findViewById(R.id.button2)
         var checkCount = 0;
 
+        //When a check box is clicked, increment or decrease check counter
         dailyCheck.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
                 checkCount++
@@ -62,6 +63,8 @@ class ConfigFragment : Fragment() {
             // 1 = every day
             // 3 = every 3 days
             // 0 = every startup
+
+            //only submit if checkcount is 1, if check count is greater than one, more than one box has been checked. Lower and not checked at all.
             if(checkCount == 1){
                 if(dailyCheck.isChecked){
                     db.setUpdate(1)
@@ -85,14 +88,18 @@ class ConfigFragment : Fragment() {
             }
             else{
                 if(govCheck.isChecked){
+                    //1 used to represent using the goc data source
                     db.setSource(1)
                 }
                 else if(openCheck.isChecked){
+                    //2 used to represent openapi data source
                     db.setSource(2)
                 }
 
+                //set Data singleton isupdating var to true, so loading fragment updates
                 Data.isupdating = true
 
+                //Display loading fragment
                 var fragTransation = fragmentManager!!.beginTransaction()
                 fragTransation.replace(android.R.id.content,LoadingFragment())
                 fragTransation.commit()

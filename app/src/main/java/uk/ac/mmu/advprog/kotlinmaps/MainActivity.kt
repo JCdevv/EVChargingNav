@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
 
         fragmentManager = supportFragmentManager
 
+        //Displays loading fragment
         var fragTransation = fragmentManager!!.beginTransaction()
         fragTransation.replace(android.R.id.content,LoadingFragment())
         fragTransation.commit()

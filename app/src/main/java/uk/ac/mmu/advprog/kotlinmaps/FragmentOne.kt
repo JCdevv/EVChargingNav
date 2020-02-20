@@ -5,9 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CompoundButton
 import android.widget.Switch
 import androidx.fragment.app.Fragment
-import android.widget.CompoundButton
+import it.beppi.tristatetogglebutton_library.TriStateToggleButton
+import it.beppi.tristatetogglebutton_library.TriStateToggleButton.OnToggleChanged
+import it.beppi.tristatetogglebutton_library.TriStateToggleButton.ToggleStatus
+
+
 
 class FragmentOne : Fragment() {
 
@@ -15,47 +20,59 @@ class FragmentOne : Fragment() {
         var view : View = inflater.inflate(R.layout.fragmentone,container,false)
         var btnFrag : Button = view.findViewById(R.id.btnFrag)
         var btnFrag2 : Button = view.findViewById(R.id.btnFrag2)
-        var freeSwitch : Switch = view.findViewById(R.id.switch1)
-        var streetSwitch : Switch = view.findViewById(R.id.switch3)
-        var onephaseSwitch : Switch = view.findViewById(R.id.switch2)
-        var triplephaseSwitch : Switch = view.findViewById(R.id.switch4)
-        var dcSwitch : Switch = view.findViewById(R.id.switch5)
 
-        freeSwitch.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-            if(isChecked == true){
-                Data.isfree = true
-            }
 
-        })
+        var freeToggle : TriStateToggleButton = view.findViewById(R.id.tstb_1)
+        var streetToggle : TriStateToggleButton = view.findViewById(R.id.tstb_2)
+        var singleToggle : TriStateToggleButton = view.findViewById(R.id.tstb_3)
+        var tripleToggle : TriStateToggleButton = view.findViewById(R.id.tstb_4)
+        var dcToggle : TriStateToggleButton = view.findViewById(R.id.tstb_5)
 
-        streetSwitch.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener{ buttonView, isChecked ->
-            if(isChecked == true){
-                Data.onstreet = true
-            }
-
-        })
-
-        onephaseSwitch.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener{ buttonView, isChecked ->
-            if(isChecked == true){
-                Data.onephase = true
-            }
-
-        })
-
-        triplephaseSwitch.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener{buttonView, isChecked ->
-            if(isChecked == true){
-                Data.triplephase = true
+        //If switch is in off (red) position, isfree = 1 (user does not want to see free points)
+        //If switch is in mid position (not chosen), isfree = 0 (user does not want to filter based on free points)
+        //If switch is in on (green) position, isfree = 2, (user wants to see free points only)
+        //The above is same for each toggle
+        freeToggle.setOnToggleChanged(OnToggleChanged { toggleStatus, _, _ ->
+            when (toggleStatus) {
+                ToggleStatus.off -> Data.isfree = 1
+                ToggleStatus.mid -> Data.isfree = 0
+                ToggleStatus.on -> Data.isfree = 2
             }
         })
 
-        dcSwitch.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-            if(isChecked == true){
-                Data.dc = true
+        streetToggle.setOnToggleChanged(OnToggleChanged { toggleStatus, _, _ ->
+            when (toggleStatus) {
+                ToggleStatus.off -> Data.onstreet = 1
+                ToggleStatus.mid -> Data.onstreet = 0
+                ToggleStatus.on -> Data.onstreet = 2
             }
-
         })
 
+        singleToggle.setOnToggleChanged(OnToggleChanged { toggleStatus, _, _ ->
+            when (toggleStatus) {
+                ToggleStatus.off -> Data.onephase = 1
+                ToggleStatus.mid -> Data.onephase = 0
+                ToggleStatus.on -> Data.onephase = 2
+            }
+        })
 
+        tripleToggle.setOnToggleChanged(OnToggleChanged { toggleStatus, _, _ ->
+            when (toggleStatus) {
+                ToggleStatus.off -> Data.triplephase = 1
+                ToggleStatus.mid -> Data.triplephase = 0
+                ToggleStatus.on -> Data.triplephase = 2
+            }
+        })
+
+        dcToggle.setOnToggleChanged(OnToggleChanged { toggleStatus, _, _ ->
+            when (toggleStatus) {
+                ToggleStatus.off -> Data.dc = 1
+                ToggleStatus.mid -> Data.dc = 0
+                ToggleStatus.on -> Data.dc = 2
+            }
+        })
+
+        //Opens maps fragment
         btnFrag.setOnClickListener( View.OnClickListener {
 
             var fragTransation = fragmentManager!!.beginTransaction()
@@ -64,6 +81,7 @@ class FragmentOne : Fragment() {
 
         })
 
+        //Opens settings fragment
         btnFrag2.setOnClickListener( View.OnClickListener {
 
             var fragTransation = fragmentManager!!.beginTransaction()

@@ -39,11 +39,11 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private lateinit var mMap: GoogleMap
     private var API_KEY = ""
 
-    var onStreet = false
-    var isFree = false
-    var onePhase = false
-    var threePhase = false
-    var dc = false
+    var onStreet = 0
+    var isFree = 0
+    var onePhase = 0
+    var threePhase = 0
+    var dc = 0
     var options = PolylineOptions()
     var route : Polyline ?= null
 
@@ -51,16 +51,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        var context: Context = activity!!.applicationContext
-        var db = DatabaseHelper(context)
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.mapsfragment, container, false)
+        //Displays map and gets users last location
         mMapView = v.findViewById(R.id.map)
         mMapView.onCreate(savedInstanceState)
         mMapView.getMapAsync(this)
@@ -89,19 +82,19 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         dc = Data.dc
         var locationmarkers = ArrayList<uk.ac.mmu.advprog.kotlinmaps.Location>()
 
-        if (onePhase) {
+        //Checks what filter options user selected
+        if (onePhase == 2) {
             locationmarkers = db.getSinglePhase(onStreet, isFree)
-        } else if (threePhase) {
+        } else if (threePhase == 2) {
             locationmarkers = db.getTriplePhase(onStreet, isFree)
-        } else if (dc) {
+        } else if (dc == 2) {
             locationmarkers = db.getDC(onStreet, isFree)
         } else {
             locationmarkers = db.getLocations(onStreet, isFree)
         }
 
-
         var markerLocation = Location("")
-
+        //Loops through every location, gets lat and long and then displays them
         for (item in locationmarkers) {
 
             markerLocation.longitude = item.longitude.toDouble()
@@ -185,10 +178,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
 
     override fun onMarkerClick(p0: Marker?): Boolean {
-
+        //Clears previous direction line
         options.points.clear()
 
+        //Gets last location
         fusedLocationClient.lastLocation.addOnSuccessListener(MainActivity()) { location ->
+            //Gets current location and destination location, used to build the url for getting the direction line between both locations
             var current = LatLng(location.latitude,location.longitude)
             currentLoc = current
 
@@ -203,6 +198,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
     private fun setUpMap(map : GoogleMap) {
+        //Checks for location permissions
         if (ActivityCompat.checkSelfPermission(
                 activity!!.applicationContext,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -216,12 +212,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             return
         }
 
+        //Informs map than location is enabled.
         map.isMyLocationEnabled = true
-
 
         fusedLocationClient.lastLocation.addOnSuccessListener(MainActivity()) { location ->
             // Got last known location. In some rare situations this can be null.
-            // 3
+
+            //Zooms map on users current location
             if (location != null) {
                 lastLocation = location
                 currentLoc = LatLng(location.latitude,location.longitude)

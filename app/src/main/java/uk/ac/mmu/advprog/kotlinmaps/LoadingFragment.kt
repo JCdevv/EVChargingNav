@@ -27,6 +27,7 @@ class LoadingFragment : Fragment() {
 
         var DB  = DatabaseHelper(activity!!.applicationContext)
 
+        //If timestamp is empty, the database is empty so it is automatically populated and a defauly update schedule of every app startup is used.
         if(DB.getTimestamp() == ""){
             var GM = getMarkers()
             GM.execute()
@@ -34,20 +35,26 @@ class LoadingFragment : Fragment() {
             DB.setUpdate(0)
         }
 
+        //Gets last time app updated
         var timestamp = Timestamp(DB.getTimestamp().toLong())
 
+        //Gets current time
         var currentTime = Timestamp(System.currentTimeMillis())
 
+        //Gets the difference between both dates
         val result = getDaysBetween(timestamp,currentTime)
 
         println("The current update schedule is every  ${DB.getSchedule()} days")
 
         println(result)
 
+        //If time since last updated greater than update schedule, update. OR if user is currently trying to update
         if(result < Integer.parseInt(DB.getSchedule()) || Data.isupdating == true){
 
+            //Empty tables so new data can be populated
             DB.emptyTables()
 
+            //Chooses data source based on users selected one
             if(DB.getSource() == 1){
                 var GM = getMarkers()
                 GM.execute()
@@ -61,6 +68,7 @@ class LoadingFragment : Fragment() {
         }
         else{
 
+            //If time since last updated not greater than update schedule, show filter fragment
             var fragTransation = fragmentManager!!.beginTransaction()
             fragTransation.replace(android.R.id.content,FragmentOne())
             fragTransation.commit()
@@ -70,6 +78,7 @@ class LoadingFragment : Fragment() {
         return view
     }
 
+    //Gets the number of days between two timestamps, used to compare against the users chosen update schedule
     private fun getDaysBetween(start: Timestamp, end: Timestamp): Int {
         var start = start
         var end = end
@@ -135,12 +144,8 @@ class LoadingFragment : Fragment() {
 
                 // Parse json
 
-                var counter = 0
-
                 var obj = JSONObject(response)
                 var jarry: JSONArray = obj.getJSONArray("ChargeDevice")
-
-                var progress = 0;
 
                 for (i in 0..(jarry.length()) -1) {
                     var deviceObject: JSONObject = jarry.get(i) as JSONObject
@@ -264,17 +269,14 @@ class LoadingFragment : Fragment() {
 
                 var lastLoc = ""
 
-
-
                 for (i in 0..(jarry.length()) -1) {
                     var deviceObject: JSONObject = jarry.get(i) as JSONObject
 
                     val locationid = deviceObject.get("UUID").toString()
 
-
+                    //OpenApi data contains duplicate values, check ID's to ensure duplicate data is not inserted
                     if (locationid.equals(lastLoc)) {
-
-                        println(lastLoc)
+                        //do nothing
                     }
                     else{
                         lastLoc = locationid
@@ -375,8 +377,6 @@ class LoadingFragment : Fragment() {
     fun insertConnectors(){
 
         println("Inserting Connectors...")
-
-
 
         var context: Context = activity!!.applicationContext
         var db = DatabaseHelper(context)
