@@ -12,7 +12,7 @@ import it.beppi.tristatetogglebutton_library.TriStateToggleButton
 import it.beppi.tristatetogglebutton_library.TriStateToggleButton.OnToggleChanged
 import it.beppi.tristatetogglebutton_library.TriStateToggleButton.ToggleStatus
 
-class FragmentOne : Fragment() {
+class FilterFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view : View = inflater.inflate(R.layout.fragmentone,container,false)

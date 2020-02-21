@@ -16,7 +16,7 @@ class ConfigFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view : View = inflater.inflate(R.layout.fragment_config,container,false)
 
-
+        //Get local variable of all checkboxes, buttons etc
         var dailyCheck : CheckBox = view.findViewById(R.id.checkBox1)
         var threeCheck : CheckBox = view.findViewById(R.id.checkBox2)
         var everydayCheck : CheckBox = view.findViewById(R.id.checkBox3)
@@ -74,7 +74,7 @@ class ConfigFragment : Fragment() {
                     db.setUpdate(0)
                 }
             }else{
-                Toast.makeText(this.context,"Please Only Choose One Option",Toast.LENGTH_SHORT)
+                Toast.makeText(this.context,"Please Only Choose One Option",Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -88,11 +88,11 @@ class ConfigFragment : Fragment() {
             }
             else{
                 if(govCheck.isChecked){
-                    //1 used to represent using the goc data source
+                    //1 used to represent using the gov data source
                     db.setSource(1)
                 }
                 else if(openCheck.isChecked){
-                    //2 used to represent openapi data source
+                    //2 used to represent openchargemap data source
                     db.setSource(2)
                 }
 

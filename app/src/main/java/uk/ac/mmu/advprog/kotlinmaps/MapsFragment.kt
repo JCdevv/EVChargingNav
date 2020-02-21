@@ -31,6 +31,7 @@ import org.json.JSONObject
 
 class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
+    //Global vars that will be initialised later
     private lateinit var lastLocation: Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     internal lateinit var mMapView: MapView
@@ -39,6 +40,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private lateinit var mMap: GoogleMap
     private var API_KEY = ""
 
+    //Used to locally store singleton values
     var onStreet = 0
     var isFree = 0
     var onePhase = 0
@@ -68,13 +70,18 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
 
+        //Set polyline options
         options.color(Color.RED)
         options.width(5f)
 
+        //Set global map variable to current map
         mMap = googleMap
+
+
         var context: Context = activity!!.applicationContext
         var db = DatabaseHelper(context)
 
+        //Set local vars
         onStreet = Data.onstreet
         isFree = Data.isfree
         onePhase = Data.onephase
@@ -116,20 +123,23 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
 
     fun getPoints(current : LatLng, destination : LatLng){
-
+        //Remove last polyline route if exists
         route?.remove()
 
+        //Creates new volley request.
+        //All asyncs would've been converted to volley requests if more time available.
         val queue = Volley.newRequestQueue(activity!!.applicationContext)
 
+        //Creates url, including required lats/longs and API key
         val url =
             "https://maps.googleapis.com/maps/api/directions/json?origin=" + current.latitude + "," + current.longitude + "&destination=" + destination.latitude + "," + destination.longitude + "&key=${API_KEY}"
-
-        println(url)
 
         val stringRequest = StringRequest(Request.Method.GET, url,
             Response.Listener<String> { response ->
 
                 var directions: JSONObject
+
+                //Parse returned json
 
                 try {
                     directions = JSONObject(response)

@@ -44,10 +44,6 @@ class LoadingFragment : Fragment() {
         //Gets the difference between both dates
         val result = getDaysBetween(timestamp,currentTime)
 
-        println("The current update schedule is every  ${DB.getSchedule()} days")
-
-        println(result)
-
         //If time since last updated greater than update schedule, update. OR if user is currently trying to update
         if(result >= Integer.parseInt(DB.getSchedule()) || Data.isupdating == true){
 
@@ -70,7 +66,7 @@ class LoadingFragment : Fragment() {
 
             //If time since last updated not greater than update schedule, show filter fragment
             var fragTransation = fragmentManager!!.beginTransaction()
-            fragTransation.replace(android.R.id.content,FragmentOne())
+            fragTransation.replace(android.R.id.content,FilterFragment())
             fragTransation.commit()
 
         }
@@ -83,29 +79,36 @@ class LoadingFragment : Fragment() {
         var start = start
         var end = end
         var negative = false
+
+        //if end timestamp is before start
         if (end.before(start)) {
             negative = true
             val temp = start
             start = end
             end = temp
         }
+
+        //Create calendar of start timestamp
         val calStart = GregorianCalendar()
         calStart.setTime(start)
         calStart.set(Calendar.HOUR_OF_DAY, 0)
         calStart.set(Calendar.MINUTE, 0)
         calStart.set(Calendar.SECOND, 0)
         calStart.set(Calendar.MILLISECOND, 0)
+
+        //Create calendar of end timestamp
         val calEnd = GregorianCalendar()
         calEnd.setTime(end)
         calEnd.set(Calendar.HOUR_OF_DAY, 0)
         calEnd.set(Calendar.MINUTE, 0)
         calEnd.set(Calendar.SECOND, 0)
         calEnd.set(Calendar.MILLISECOND, 0)
+
+        //if years are equal
         if (calStart.get(Calendar.YEAR) === calEnd.get(Calendar.YEAR)) {
-            return if (negative) (calEnd.get(Calendar.DAY_OF_YEAR) - calStart.get(Calendar.DAY_OF_YEAR)) * -1 else calEnd.get(
-                Calendar.DAY_OF_YEAR
-            ) - calStart.get(Calendar.DAY_OF_YEAR)
+            return if (negative) (calEnd.get(Calendar.DAY_OF_YEAR) - calStart.get(Calendar.DAY_OF_YEAR)) * -1 else calEnd.get(Calendar.DAY_OF_YEAR) - calStart.get(Calendar.DAY_OF_YEAR)
         }
+
         var days = 0
         while (calEnd.after(calStart)) {
             calStart.add(Calendar.DAY_OF_YEAR, 1)
@@ -135,11 +138,7 @@ class LoadingFragment : Fragment() {
 
             //Convert stream into a usable string
 
-            println(input)
-
             var response: String = convertStreamToString(input)
-
-            println(response)
 
             try {
 
@@ -174,7 +173,7 @@ class LoadingFragment : Fragment() {
                     val parkingpaymentdetails = deviceObject.get("ParkingFeesDetails").toString()
                     val onstreet = deviceObject.get("OnStreetFlag").toString()
 
-
+                    //Add current connector and location to array
                     for( i in 0..connArray.length()-1){
 
 
@@ -226,13 +225,13 @@ class LoadingFragment : Fragment() {
         }
 
 
-
+        //When done, insert locations and connectors and change to filter fragment
         override fun onPostExecute(result: Boolean) {
             insertLocations()
             insertConnectors()
 
             var fragTransation = fragmentManager!!.beginTransaction()
-            fragTransation.replace(android.R.id.content,FragmentOne())
+            fragTransation.replace(android.R.id.content,FilterFragment())
             fragTransation.commit()
 
 
@@ -275,7 +274,7 @@ class LoadingFragment : Fragment() {
 
                     val locationid = deviceObject.get("UUID").toString()
 
-                    //OpenApi data contains duplicate values, check ID's to ensure duplicate data is not inserted
+                    //Openchargemap data contains duplicate values, check ID's to ensure duplicate data is not inserted
                     if (locationid.equals(lastLoc)) {
                         //do nothing
                     }
@@ -323,6 +322,7 @@ class LoadingFragment : Fragment() {
                         val outputcurrent = "N/A"
                         val service = "N/A"
 
+                        //Add current connector and location to array
                         val con = Connector(
                             locationid,
                             0,
@@ -362,13 +362,13 @@ class LoadingFragment : Fragment() {
         }
 
 
-
+        //When done, insert locations and connectors and change to filter fragment
         override fun onPostExecute(result: Boolean) {
             insertLocations()
             insertConnectors()
 
             var fragTransation = fragmentManager!!.beginTransaction()
-            fragTransation.replace(android.R.id.content,FragmentOne())
+            fragTransation.replace(android.R.id.content,FilterFragment())
             fragTransation.commit()
 
         }

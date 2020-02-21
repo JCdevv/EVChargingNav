@@ -9,20 +9,18 @@ import androidx.fragment.app.Fragment
 
 class HelpFragment : Fragment() {
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view : View = inflater.inflate(R.layout.helpfragment,container,false)
         var subBtn : Button = view.findViewById(R.id.rtnBtn)
 
+        //returns back to filter fragment
         subBtn.setOnClickListener( View.OnClickListener {
 
             var fragTransation = fragmentManager!!.beginTransaction()
-            fragTransation.replace(android.R.id.content,FragmentOne()).addToBackStack(null).commit()
+            fragTransation.replace(android.R.id.content,FilterFragment()).addToBackStack(null).commit()
 
 
         })
-
-
 
         return view
     }
