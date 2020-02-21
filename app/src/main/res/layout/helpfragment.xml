@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="274dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="68dp"
+            android:layout_marginTop="38dp"
+            android:layout_marginEnd="68dp"
+            android:layout_marginBottom="629dp"
+            android:text="How To Use The App"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="25sp" />
+
+    <TextView
+            android:id="@+id/textTitle2"
+            android:layout_width="396dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="124dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="543dp"
+            android:text="Start by filtering your chosen charging points. The sliders on the filtering page have three states:"
+            android:textAlignment="viewStart"
+            android:textSize="18sp" />
+
+    <TextView
+            android:id="@+id/textTitle8"
+            android:layout_width="396dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="350dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="317dp"
+            android:text="Only chose one of either Single Phase, Three Phase or DC."
+            android:textAlignment="viewStart"
+            android:textSize="18sp" />
+
+    <TextView
+            android:id="@+id/textTitle7"
+            android:layout_width="396dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="443dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="224dp"
+            android:text='Once done, select "show charging points" to be shown charging points according to your filtered criteria. '
+            android:textAlignment="viewStart"
+            android:textSize="18sp" />
+
+    <TextView
+            android:id="@+id/textTitle9"
+            android:layout_width="396dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="512dp"
+            android:layout_marginEnd="9dp"
+            android:layout_marginBottom="155dp"
+            android:text="Click a Marker to be provided directions towards it from your current location."
+            android:textAlignment="viewStart"
+            android:textSize="18sp" />
+
+    <TextView
+            android:id="@+id/textTitle4"
+            android:layout_width="396dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="190dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginBottom="477dp"
+            android:text="Red: Do not show markers that match this attribute."
+            android:textAlignment="viewStart"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="18sp" />
+
+    <TextView
+            android:id="@+id/textTitle5"
+            android:layout_width="396dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="240dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="427dp"
+            android:text="Yellow: Do not use this attribute to filter markers."
+            android:textAlignment="viewStart"
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="18sp" />
+
+    <TextView
+            android:id="@+id/textTitle6"
+            android:layout_width="396dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="275dp"
+            android:layout_marginEnd="9dp"
+            android:layout_marginBottom="392dp"
+            android:text="Green: Only show markers that match this attribute."
+            android:textAlignment="viewStart"
+            android:textColor="@android:color/holo_green_dark"
+            android:textSize="18sp" />
+
+    <Button
+            android:id="@+id/rtnBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="160dp"
+            android:layout_marginTop="629dp"
+            android:layout_marginEnd="163dp"
+            android:layout_marginBottom="54dp"
+            android:text="Return" />
+
+
+</RelativeLayout>

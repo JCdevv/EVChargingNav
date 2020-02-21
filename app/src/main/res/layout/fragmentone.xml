@@ -4,22 +4,6 @@
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <it.beppi.tristatetogglebutton_library.TriStateToggleButton
-            android:id="@+id/tstb_1"
-            android:layout_width="wrap_content"
-            android:layout_height="10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="238dp"
-            android:layout_marginTop="142dp"
-            android:layout_marginEnd="65dp"
-            android:layout_marginBottom="588dp"
-            app:tbDefaultStatus="mid"
-            app:tbOffColor="#FF0000"
-            />
-
     <TextView
             android:id="@+id/textTitle"
             android:layout_width="wrap_content"
@@ -31,22 +15,36 @@
 
     <Button
             android:id="@+id/btnFrag2"
-            android:layout_width="160dp"
-            android:layout_height="55dp"
+            android:layout_width="127dp"
+            android:layout_height="39dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="116dp"
-            android:layout_marginTop="647dp"
-            android:layout_marginEnd="135dp"
-            android:layout_marginBottom="28dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="645dp"
+            android:layout_marginEnd="224dp"
+            android:layout_marginBottom="46dp"
             android:text="SETTINGS" />
 
     <Button
+            android:id="@+id/btnFrag3"
+            android:layout_width="127dp"
+            android:layout_height="39dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="204dp"
+            android:layout_marginTop="646dp"
+            android:layout_marginEnd="80dp"
+            android:layout_marginBottom="45dp"
+            android:text="HELP" />
+
+    <Button
             android:id="@+id/btnFrag"
-            android:layout_width="268dp"
-            android:layout_height="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="54dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
@@ -54,24 +52,8 @@
             android:layout_marginStart="59dp"
             android:layout_marginTop="533dp"
             android:layout_marginEnd="83dp"
-            android:layout_marginBottom="115dp"
+            android:layout_marginBottom="144dp"
             android:text="Show Charging Points" />
-
-    <TextView
-            android:id="@+id/textView4"
-            android:layout_width="141dp"
-            android:layout_height="33dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="75dp"
-            android:layout_marginTop="142dp"
-            android:layout_marginEnd="195dp"
-            android:layout_marginBottom="556dp"
-            android:text="Show Free Points"
-            android:textAlignment="center"
-            android:textStyle="bold" />
 
     <TextView
             android:id="@+id/textView5"
@@ -81,29 +63,44 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="56dp"
+            android:layout_marginStart="25dp"
             android:layout_marginTop="210dp"
-            android:layout_marginEnd="182dp"
+            android:layout_marginEnd="213dp"
             android:layout_marginBottom="486dp"
             android:text="Show On Street Points"
             android:textAlignment="center"
             android:textStyle="bold" />
 
-    <it.beppi.tristatetogglebutton_library.TriStateToggleButton
-            android:id="@+id/tstb_2"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
+    <TextView
+            android:id="@+id/textView4"
+            android:layout_width="141dp"
+            android:layout_height="33dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="236dp"
-            android:layout_marginTop="207dp"
-            android:layout_marginEnd="65dp"
-            android:layout_marginBottom="524dp"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="142dp"
+            android:layout_marginEnd="226dp"
+            android:layout_marginBottom="556dp"
+            android:text="Show Free Points"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+    <it.beppi.tristatetogglebutton_library.TriStateToggleButton
+            android:id="@+id/tstb_1"
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="203dp"
+            android:layout_marginTop="134dp"
+            android:layout_marginEnd="93dp"
+            android:layout_marginBottom="596dp"
             app:tbDefaultStatus="mid"
-            app:tbOffColor="#FF0000"
-            />
+            app:tbOffColor="#FF0000" />
 
     <TextView
             android:id="@+id/textView6"
@@ -113,28 +110,13 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="57dp"
-            android:layout_marginTop="272dp"
-            android:layout_marginEnd="181dp"
-            android:layout_marginBottom="424dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="296dp"
+            android:layout_marginEnd="212dp"
+            android:layout_marginBottom="400dp"
             android:text="Single Phase"
             android:textAlignment="center"
             android:textStyle="bold" />
-
-    <it.beppi.tristatetogglebutton_library.TriStateToggleButton
-            android:id="@+id/tstb_3"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="239dp"
-            android:layout_marginTop="263dp"
-            android:layout_marginEnd="60dp"
-            android:layout_marginBottom="468dp"
-            app:tbDefaultStatus="mid"
-            app:tbOffColor="#FF0000"/>
 
     <TextView
             android:id="@+id/textView7"
@@ -144,10 +126,10 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="58dp"
-            android:layout_marginTop="350dp"
-            android:layout_marginEnd="180dp"
-            android:layout_marginBottom="346dp"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="353dp"
+            android:layout_marginEnd="212dp"
+            android:layout_marginBottom="343dp"
             android:text="Triple Phase"
             android:textAlignment="center"
             android:textStyle="bold" />
@@ -160,9 +142,9 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="56dp"
+            android:layout_marginStart="25dp"
             android:layout_marginTop="412dp"
-            android:layout_marginEnd="182dp"
+            android:layout_marginEnd="213dp"
             android:layout_marginBottom="284dp"
             android:text="DC"
             android:textAlignment="center"
@@ -176,12 +158,12 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="238dp"
+            android:layout_marginStart="207dp"
             android:layout_marginTop="401dp"
-            android:layout_marginEnd="63dp"
+            android:layout_marginEnd="94dp"
             android:layout_marginBottom="330dp"
             app:tbDefaultStatus="mid"
-            app:tbOffColor="#FF0000"/>
+            app:tbOffColor="#FF0000" />
 
     <it.beppi.tristatetogglebutton_library.TriStateToggleButton
             android:id="@+id/tstb_4"
@@ -191,11 +173,111 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="238dp"
-            android:layout_marginTop="338dp"
-            android:layout_marginEnd="62dp"
-            android:layout_marginBottom="393dp"
+            android:layout_marginStart="207dp"
+            android:layout_marginTop="344dp"
+            android:layout_marginEnd="94dp"
+            android:layout_marginBottom="387dp"
             app:tbDefaultStatus="mid"
-            app:tbOffColor="#FF0000"/>
+            app:tbOffColor="#FF0000" />
+
+    <it.beppi.tristatetogglebutton_library.TriStateToggleButton
+            android:id="@+id/tstb_2"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="207dp"
+            android:layout_marginTop="201dp"
+            android:layout_marginEnd="93dp"
+            android:layout_marginBottom="530dp"
+            app:tbDefaultStatus="mid"
+            app:tbOffColor="#FF0000" />
+
+    <it.beppi.tristatetogglebutton_library.TriStateToggleButton
+            android:id="@+id/tstb_3"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="208dp"
+            android:layout_marginTop="283dp"
+            android:layout_marginEnd="91dp"
+            android:layout_marginBottom="448dp"
+            app:tbDefaultStatus="mid"
+            app:tbOffColor="#FF0000" />
+
+    <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="333dp"
+            android:layout_marginTop="148dp"
+            android:layout_marginEnd="19dp"
+            android:layout_marginBottom="565dp"
+            android:textSize="10sp" />
+
+    <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="332dp"
+            android:layout_marginTop="219dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="493dp"
+            android:textSize="10sp" />
+
+    <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="335dp"
+            android:layout_marginTop="304dp"
+            android:layout_marginEnd="17dp"
+            android:layout_marginBottom="409dp"
+            android:textSize="10sp" />
+
+    <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="332dp"
+            android:layout_marginTop="360dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="353dp"
+            android:textSize="10sp" />
+
+    <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="333dp"
+            android:layout_marginTop="418dp"
+            android:layout_marginEnd="19dp"
+            android:layout_marginBottom="295dp"
+            android:textSize="10sp" />
 
 </RelativeLayout>

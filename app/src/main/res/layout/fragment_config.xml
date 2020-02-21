@@ -134,7 +134,7 @@
 
     <CheckBox
             android:id="@+id/checkBox5"
-            android:layout_width="168dp"
+            android:layout_width="238dp"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -142,9 +142,9 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="1dp"
             android:layout_marginTop="522dp"
-            android:layout_marginEnd="242dp"
+            android:layout_marginEnd="172dp"
             android:layout_marginBottom="172dp"
-            android:text="The other one" />
+            android:text="OpenChargeMap (Provides much fewer results)" />
 
     <Button
             android:id="@+id/button2"
@@ -158,7 +158,7 @@
             android:layout_marginTop="596dp"
             android:layout_marginEnd="165dp"
             android:layout_marginBottom="87dp"
-            android:text="Button" />
+            android:text="Submit" />
 
 
 </RelativeLayout>

@@ -29,7 +29,7 @@ class LoadingFragment : Fragment() {
 
         //If timestamp is empty, the database is empty so it is automatically populated and a defauly update schedule of every app startup is used.
         if(DB.getTimestamp() == ""){
-            var GM = getMarkers()
+            var GM = getGovMarkers()
             GM.execute()
 
             DB.setUpdate(0)
@@ -49,14 +49,14 @@ class LoadingFragment : Fragment() {
         println(result)
 
         //If time since last updated greater than update schedule, update. OR if user is currently trying to update
-        if(result < Integer.parseInt(DB.getSchedule()) || Data.isupdating == true){
+        if(result >= Integer.parseInt(DB.getSchedule()) || Data.isupdating == true){
 
             //Empty tables so new data can be populated
             DB.emptyTables()
 
             //Chooses data source based on users selected one
             if(DB.getSource() == 1){
-                var GM = getMarkers()
+                var GM = getGovMarkers()
                 GM.execute()
             }
             else{
@@ -114,7 +114,8 @@ class LoadingFragment : Fragment() {
         return if (negative) days * -1 else days
     }
 
-    inner class getMarkers : AsyncTask<Void, Int, Boolean>() {
+    //Makes a http request to the gov api, parses the json and inserts the locations and connectors into the database
+    inner class getGovMarkers : AsyncTask<Void, Int, Boolean>() {
 
         override fun doInBackground(vararg p0: Void?): Boolean {
 
@@ -238,7 +239,7 @@ class LoadingFragment : Fragment() {
         }
     }
 
-
+    //Makes a http request to the open chargemap api, parses the json and inserts the locations and connectors into the database
     inner class getOpenMarkers : AsyncTask<Void, Int, Boolean>() {
 
         override fun doInBackground(vararg p0: Void?): Boolean {
@@ -248,7 +249,7 @@ class LoadingFragment : Fragment() {
             var input: InputStream? = null
 
             try {
-                var url = URL("https://api.openchargemap.io/v3/poi/?output=json&countrycode=GB&maxresults=500")
+                var url = URL("https://api.openchargemap.io/v3/poi/?output=json&countrycode=GB&maxresults=500&key=")
                 //Open connection
                 urlConnection = url.openConnection() as HttpURLConnection
                 input = BufferedInputStream(urlConnection.inputStream)
@@ -366,7 +367,6 @@ class LoadingFragment : Fragment() {
             insertLocations()
             insertConnectors()
 
-
             var fragTransation = fragmentManager!!.beginTransaction()
             fragTransation.replace(android.R.id.content,FragmentOne())
             fragTransation.commit()
@@ -374,6 +374,7 @@ class LoadingFragment : Fragment() {
         }
     }
 
+    //Inserts connectors into database
     fun insertConnectors(){
 
         println("Inserting Connectors...")
@@ -382,33 +383,14 @@ class LoadingFragment : Fragment() {
         var db = DatabaseHelper(context)
 
         db.insertConnectors(connectors)
+        db.createChargeIDs(connectors)
 
-        for (i in 0..connectors!!.size - 1) {
-
-            var con = connectors!!.get(i)
-            con.connectorid = i
-
-            // IDS:
-            // 1 = Single Phase
-            // 2 = DC
-            // 3 = Three Phase
-
-            when(con.chargemethod){
-                "Single Phase AC" -> {
-                    db.createChargeIDs(con,1)
-                }
-                "Three Phase AC" -> {
-                    db.createChargeIDs(con,3)
-                }
-                "DC" ->{
-                    db.createChargeIDs(con,2)
-                }
-            }
-        }
-
+        //clear array for next update
         connectors.clear()
     }
 
+
+    //Inserts locations into database
     fun insertLocations(){
 
         println("Inserting Locations...")
@@ -418,10 +400,11 @@ class LoadingFragment : Fragment() {
 
         db.insertLocations(locations)
 
+        //clear array for next update
         locations.clear()
     }
 
-
+    //converts stream input from http request into readable string
     fun convertStreamToString(`is`: InputStream?): String {
         val s = java.util.Scanner(`is`).useDelimiter("\\A")
         return if (s.hasNext()) s.next() else ""

@@ -89,8 +89,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             locationmarkers = db.getTriplePhase(onStreet, isFree)
         } else if (dc == 2) {
             locationmarkers = db.getDC(onStreet, isFree)
-        } else {
-            locationmarkers = db.getLocations(onStreet, isFree)
         }
 
         var markerLocation = Location("")
